@@ -132,7 +132,7 @@ STATIC_URL = '/static/'
 
 # Additional locations for static files (updated for the nested package layout)
 STATICFILES_DIRS = [
-    BASE_DIR / 'nodes' / 'nodes' / 'static',
+    BASE_DIR / 'nodes' / 'static',
 ]
 
 # The directory where WhiteNoise looks for collected files to serve in production
