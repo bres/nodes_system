@@ -128,12 +128,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://djangoproject.com
 
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 
-# Additional locations for static files (updated for the nested package layout)
-STATICFILES_DIRS = [
-    BASE_DIR / 'nodes' / 'static',
-]
+# Clear custom manual directory mapping so Django uses AppDirectoriesFinder automatically
+STATICFILES_DIRS = []
 
 # The directory where WhiteNoise looks for collected files to serve in production
 STATIC_ROOT = BASE_DIR / 'staticfiles'
