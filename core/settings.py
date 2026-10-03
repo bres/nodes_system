@@ -130,6 +130,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Additional locations for static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'nodes' / 'static',
+]
+
 # The directory where WhiteNoise looks for collected files to serve in production
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
