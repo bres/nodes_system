@@ -132,7 +132,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Clear custom manual directory mapping so Django uses AppDirectoriesFinder automatically
-STATICFILES_DIRS = []
+STATICFILES_DIRS = [
+    BASE_DIR / 'nodes' / 'nodes' / 'static',
+]
 
 # The directory where WhiteNoise looks for collected files to serve in production
 STATIC_ROOT = BASE_DIR / 'staticfiles'
