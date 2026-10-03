@@ -1,0 +1,165 @@
+{% load header_helpers %}
+{% detail_page_label as page_detail_label %}
+<header class="card shadow-sm rounded-3 bg-white overflow-visible sticky-top p-3 mb-3 z-2 align-items-start">
+    <nav aria-label="breadcrumb" class="w-100 mb-3  border-1 border-bottom border-bottom-success p-2 border-opacity-10 d-flex align-items-center mt-0 pb-2 ">
+        {% with home_text=home_label|default:'Home' %}
+            <ol class="breadcrumb align-items-center p-0 mb-0 small tracking-wider">
+                {% if breadcrumb_items %}
+                    {% for item in breadcrumb_items %}
+                        {% if item.label|lower == 'home' and forloop.first %}
+                            {% if item.active %}
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span class="d-inline-flex align-items-center gap-2 text-secondary fw-semibold">
+                                        <i class="bi bi-house-door"></i>
+                                        <span>{{ home_text }}</span>
+                                    </span>
+                                </li>
+                            {% else %}
+                                <li class="breadcrumb-item">
+                                    <a href="{% if item.url and item.url != '#' %}{{ item.url }}{% else %}javascript:history.back(){% endif %}"
+                                       class="d-inline-flex align-items-center gap-2 text-muted text-decoration-none fw-semibold transition-colors hover-text-dark">
+                                        <i class="bi bi-house-door"></i>
+                                        <span>{{ home_text }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% else %}
+                            {% if item.active %}
+                                <li class="breadcrumb-item active text-dark fw-bold" aria-current="page">
+                                    <span>{{ item.label }}</span>
+                                </li>
+                            {% else %}
+                                <li class="breadcrumb-item">
+                                    <a href="{% if item.url and item.url != '#' %}{{ item.url }}{% else %}javascript:history.back(){% endif %}"
+                                       class="text-muted text-decoration-none fw-semibold transition-colors hover-text-dark">
+                                        {{ item.label }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% elif page_title == "Dashboard" %}
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <span class="d-inline-flex align-items-center gap-2 text-secondary fw-semibold">
+                            <i class="bi bi-house-door"></i>
+                            <span>{{ home_text }}</span>
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'dashboard' %}"
+                           class="d-inline-flex align-items-center gap-2 text-muted text-decoration-none fw-semibold transition-colors hover-text-dark">
+                            <i class="bi bi-house-door"></i>
+                            <span>{{ home_text }}</span>
+                        </a>
+                    </li>
+                    {% if parent_breadcrumb_label %}
+                        <li class="breadcrumb-item">
+                            <a href="{{ parent_breadcrumb_url }}" class="text-muted text-decoration-none fw-semibold transition-colors hover-text-dark">
+                                {{ parent_breadcrumb_label }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if page_is_detail %}
+                        <li class="breadcrumb-item">
+                            <a href="{{ page_list_url }}" class="text-muted text-decoration-none fw-semibold transition-colors hover-text-dark">
+                                {{ page_title }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    <li class="breadcrumb-item active text-dark fw-bold" aria-current="page">
+                        <span>{% if page_is_detail %}{{ page_detail_label }}{% else %}{{ page_title }}{% endif %}</span>
+                    </li>
+                {% endif %}
+            </ol>
+        {% endwith %}
+    </nav>
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 w-100">
+        <div class="d-flex align-items-center gap-3">
+            <div class="d-inline-flex align-items-center justify-content-center rounded-circle p-3 bg-primary">
+                <i class="{{ page_icon|default:'bi bi-files' }} fs-5 lh-1"></i>
+            </div>
+            {% if page_heading %}
+                <div>
+                    <h1 class="h6 fw-semibold mb-0 text-dark">{{ page_heading }}</h1>
+                    <small class="text-dark">{{ page_subtitle|default:'' }}</small>
+                </div>
+            {% else %}
+                {% if page_title == "Dashboard" %}
+                    <div>
+                        <h1 class="h6 fw-semibold mb-0 text-dark">{{ page_title }}</h1>
+                        <small class="text-dark">System Inventory Overview</small>
+                    </div>
+                {% else %}
+                    <div>
+                        <h1 class="h6 fw-semibold mb-0 text-dark">{{ page_title }}</h1>
+                        <small class="text-dark">Manage {{ page_title }}</small>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% if page_title != "Dashboard" or page_heading %}
+            <div class="page-header-actions ms-sm-auto flex-shrink-0 align-self-center d-flex align-items-center gap-2">
+                {% if header_action_url %}
+                    <a href="{{ header_action_url }}"
+                       class="btn btn-outline-primary rounded-3 px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi {{ header_action_icon }}"></i>
+                        <span>{{ header_action_label }}</span>
+                    </a>
+                {% endif %}
+                {% if page_status_label %}
+                    <span class="badge rounded-pill bg-{{ page_status_class }}-subtle text-{{ page_status_class }} border border-{{ page_status_class }}-subtle px-3 py-2">
+                        <i class="bi {{ page_status_icon }} me-1"></i>{{ page_status_label }}
+                    </span>
+                {% endif %}
+                {% if not hide_header_actions and not page_is_edit %}
+                    <div class="dropdown">
+                        <button class="btn btn-light border dropdown-toggle rounded-3 px-3 py-2 fw-semibold shadow-sm d-inline-flex align-items-center gap-2"
+                                data-bs-toggle="dropdown">
+                            <i class="bi bi-download"></i>
+                            <span>Export</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-light-subtle rounded-3">
+                            {% if page_is_statistics %}
+                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'export-device-statistics' format_name='pdf' %}"><i class="bi bi-file-earmark-pdf text-danger"></i>PDF Report</a></li>
+                                <li><a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'export-device-statistics' format_name='json' %}"><i class="bi bi-braces text-dark"></i>JSON Data</a></li>
+                            {% elif page_export_model_name %}
+                                {% if page_is_detail %}
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'export-record' model_name=page_export_model_name pk=page_export_object_pk format_name='docx' %}"><i class="bi bi-file-earmark-word text-primary"></i>DOCX Document</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'export-record' model_name=page_export_model_name pk=page_export_object_pk format_name='json' %}"><i class="bi bi-braces text-dark"></i>JSON Data</a></li>
+                                {% else %}
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'export-records' model_name=page_export_model_name format_name='docx' %}"><i class="bi bi-file-earmark-word text-primary"></i>DOCX Document</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center gap-2" href="{% url 'export-records' model_name=page_export_model_name format_name='json' %}"><i class="bi bi-braces text-dark"></i>JSON Data</a></li>
+                                {% endif %}
+                            {% else %}
+                                <li><span class="dropdown-item-text text-muted">No export formats available</span></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if page_add_url %}
+                    <a href="{{ page_add_url }}"
+                       class="page-header-add btn btn-success rounded-3 px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm">
+                        <i class="bi bi-plus-lg"></i>
+                        <span class="d-inline d-sm-none">Add</span>
+                        <span class="d-none d-sm-inline">Add New {{ page_title }}</span>
+                    </a>
+                {% endif %}
+                {% if page_is_detail %}
+                    <button type="button"
+                            class="btn btn-info rounded-3 px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm"
+                            onclick="window.location.href='{{ page_edit_url }}'">
+                        <i class="bi bi-pencil"></i>
+                        <span>Edit</span>
+                    </button>
+                    <button type="button"
+                            class="btn btn-danger rounded-3 px-3 py-2 fw-semibold d-inline-flex align-items-center gap-2 shadow-sm"
+                            onclick="window.location.href='{{ page_delete_url }}'">
+                        <i class="bi bi-trash"></i>
+                        <span>Delete</span>
+                    </button>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</header>

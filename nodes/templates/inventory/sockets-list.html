@@ -1,0 +1,159 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pb-3">
+        {% include 'inventory/header.html' %}
+        <!-- Table View Card Container -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover">
+                            <thead class="table-light text-muted text-uppercase small border-bottom">
+                                <tr>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-start ps-3"
+                                        style="width: 18%; min-width: 140px;">Socket Code</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 10%">Status</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 12%">City</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 12%">Area</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 18%">Building</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 10%">Floor</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 12%">Com.area</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 12%">Room</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-bold text-center"
+                                        style="width: 12%">Space</th>
+                                    <th scope="col"
+                                        class="py-3 text-center text-secondary fw-bold"
+                                        style="width: 10%">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-secondary fs-6">
+                                {% for socket in sockets %}
+                                    <tr class="border-bottom">
+                                        <td class="py-3 bg-transparent text-start ps-3">
+                                            <a href="{% url 'socket-detail' socket.pk %}"
+                                               class="fw-semibold text-dark text-decoration-none link-primary">
+                                                {{ socket.socket_code|capfirst }}
+                                            </a>
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent">
+                                            {% if socket.devices_count %}
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 small">Connected</span>
+                                            {% else %}
+                                                <span class="badge bg-light text-secondary border rounded-pill px-2.5 py-1 small">Available</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent text-muted text-nowrap px-3">
+                                            {% if socket.space %}
+                                                {{ socket.space.room.floor.building.area.city.name|default:"—"|capfirst }}
+                                            {% elif socket.common_area %}
+                                                {{ socket.common_area.floor.building.area.city.name|default:"—"|capfirst }}
+                                            {% else %}
+                                                <span class="text-muted small">Orphaned Connection</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent text-muted text-nowrap px-3">
+                                            {% if socket.space %}
+                                                {{ socket.space.room.floor.building.area.name|default:"—"|capfirst }}
+                                            {% elif socket.common_area %}
+                                                {{ socket.common_area.floor.building.area.name|default:"—"|capfirst }}
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent px-2" style="white-space: normal; overflow-wrap: anywhere; word-break: break-word;">
+                                            {% if socket.space %}
+                                                {{ socket.space.room.floor.building.name|capfirst }}
+                                            {% elif socket.common_area %}
+                                                {{ socket.common_area.floor.building.name|capfirst }}
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent">
+                                            {% if socket.space %}
+                                                 {{ socket.space.room.floor.floor_number }}
+                                            {% elif socket.common_area %}
+                                                 {{ socket.common_area.floor.floor_number }}
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent">
+                                            {% if socket.common_area %}
+                                                {{ socket.common_area.name|capfirst }}
+                                            {% elif socket.space %}
+                                                <span class="text-muted">—</span>
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent">
+                                            {% if socket.space %}
+                                                <a href="{% url 'room-detail' socket.space.room.pk %}"
+                                                   class="text-decoration-none link-secondary">
+                                                    {{ socket.space.room.room_code|capfirst }}
+                                                </a>
+                                            {% elif socket.common_area %}
+                                                <span class="text-muted">—</span>
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent">
+                                            {% if socket.space %}
+                                                {{ socket.space.name|capfirst }}
+                                            {% elif socket.common_area %}
+                                                {{ socket.common_area.name|capfirst }}
+                                            {% else %}
+                                                <span class="text-muted">—</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="text-center py-3 bg-transparent">
+                                            <a href="{% url 'socket-detail' socket.pk %}"
+                                               class="btn btn-link text-secondary p-1 rounded-2 d-inline-flex align-items-center justify-content-center text-decoration-none"
+                                               title="View details"
+                                               style="width: 32px; height: 32px">
+                                                <i class="bi bi-eye fs-5 text-primary"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="11" class="text-center py-5 text-muted bg-transparent">
+                                            <div class="p-4">
+                                                <i class="{{ page_icon }} text-primary fs-1 d-block mb-3"></i>
+                                                <h6 class="fw-semibold text-dark mb-1">No Ethernet Sockets Registered</h6>
+                                                <p class="small text-muted mb-3">Get started by creating your first socket record.</p>
+                                                <a href="{% url 'new-socket' %}"
+                                                   class="btn btn-sm btn-success rounded-3 px-3 py-2 fw-semibold">
+                                                    <i class="bi bi-plus-lg me-1"></i>Add Socket
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

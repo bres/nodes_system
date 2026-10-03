@@ -1,0 +1,272 @@
+<!-- Bootstrap 5 CSS -->
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'nodes/css/map.css' %}">
+    <div class="query-ui">
+        <h1 class="query-ui-title text-center mb-4">Select Query</h1>
+        <div class="query-ui-wrapper">
+            <div class="query-ui-field">
+                <label class="query-ui-label">City</label>
+                <select id="citySelect" class="query-ui-select">
+                    <option value="">-- Select City --</option>
+                </select>
+            </div>
+            <div class="query-ui-field">
+                <label class="query-ui-label">Area</label>
+                <select id="areaSelect" class="query-ui-select" disabled>
+                    <option value="">-- Select City First --</option>
+                </select>
+            </div>
+            <div class="query-ui-field">
+                <label class="query-ui-label">Building</label>
+                <select id="buildingSelect" class="query-ui-select" disabled>
+                    <option value="">-- Select Area First --</option>
+                </select>
+            </div>
+            <div class="query-ui-field">
+                <label class="query-ui-label">Floor</label>
+                <select id="floorSelect" class="query-ui-select" disabled>
+                    <option value="">-- Select Building First --</option>
+                </select>
+            </div>
+            <div class="query-ui-field">
+                <label class="query-ui-label">Room</label>
+                <select id="roomSelect" class="query-ui-select" disabled>
+                    <option value="">-- Select Floor First --</option>
+                </select>
+            </div>
+            <div class="query-ui-field">
+                <label class="query-ui-label">Space</label>
+                <select id="spaceSelect" class="query-ui-select" disabled>
+                    <option value="">-- Select Room First --</option>
+                </select>
+            </div>
+            <div class="query-ui-field">
+                <label class="query-ui-label">Devices</label>
+                <select id="deviceSelect" class="query-ui-select" disabled>
+                    <option value="">-- Select Space First --</option>
+                </select>
+            </div>
+        </div>
+        <!-- DEVICE INFO PANEL -->
+        <div id="deviceInfo" class="query-ui-device d-none">
+            <div class="query-ui-card">
+                <div class="query-ui-card-header">Device Information</div>
+                <div class="query-ui-card-body">
+                    <table class="query-ui-table" id="deviceTable">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+// ---------------------------------------------------------
+// DUMMY DATA (FULL HIERARCHY + DEVICE DETAILS)
+// ---------------------------------------------------------
+const data = {
+    "Athens": {
+        "Vari": {
+            "Kedy-A": {
+                "1": {
+                    "2": {
+                        "E": {
+                            "AIO-001": {
+                                ID: 1,
+                                BRAND: "Dell",
+                                MODEL: "Promax",
+                                SERIAL: "AX3345",
+                                REGCODE: "Π63662",
+                                IP: "192.168.2.2",
+                                MAC: "00:11:22:33:44:55",
+                                USAGE: "Office",
+                                TYPE: "AIO",
+                                CITY: "Athens",
+                                AREA: "Vari",
+                                BUILDING: "Kedy-A",
+                                FLOOR: "1",
+                                ROOM: "2",
+                                SPACE: "E"
+                            },
+                            "AIO-002": {
+                                ID: 2,
+                                BRAND: "HP",
+                                MODEL: "EliteOne",
+                                SERIAL: "HP9988",
+                                REGCODE: "Π99887",
+                                IP: "192.168.2.3",
+                                MAC: "AA:BB:CC:DD:EE:FF",
+                                USAGE: "Office",
+                                TYPE: "AIO",
+                                CITY: "Athens",
+                                AREA: "Vari",
+                                BUILDING: "Kedy-A",
+                                FLOOR: "1",
+                                ROOM: "2",
+                                SPACE: "E"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "Glyfada": {
+            "Building A": {
+                "Floor 1": {
+                    "Room 101": {
+                        "Space A": {
+                            "PC-001": {
+                                ID: 10,
+                                BRAND: "Lenovo",
+                                MODEL: "ThinkCentre M90",
+                                SERIAL: "LN001",
+                                REGCODE: "A12345",
+                                IP: "10.0.0.10",
+                                MAC: "11:22:33:44:55:66",
+                                USAGE: "Office",
+                                TYPE: "Desktop",
+                                CITY: "Athens",
+                                AREA: "Glyfada",
+                                BUILDING: "Building A",
+                                FLOOR: "Floor 1",
+                                ROOM: "Room 101",
+                                SPACE: "Space A"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+    "Thessaloniki": {
+        "Center": {
+            "Tower 1": {
+                "3": {
+                    "301": {
+                        "A": {
+                            "Printer-01": {
+                                ID: 50,
+                                BRAND: "Canon",
+                                MODEL: "LBP6000",
+                                SERIAL: "CN6000",
+                                REGCODE: "Θ12345",
+                                IP: "172.16.1.50",
+                                MAC: "66:55:44:33:22:11",
+                                USAGE: "Office",
+                                TYPE: "Printer",
+                                CITY: "Thessaloniki",
+                                AREA: "Center",
+                                BUILDING: "Tower 1",
+                                FLOOR: "3",
+                                ROOM: "301",
+                                SPACE: "A"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+};
+
+// ---------------------------------------------------------
+// DOM ELEMENTS
+// ---------------------------------------------------------
+const citySelect     = document.getElementById("citySelect");
+const areaSelect     = document.getElementById("areaSelect");
+const buildingSelect = document.getElementById("buildingSelect");
+const floorSelect    = document.getElementById("floorSelect");
+const roomSelect     = document.getElementById("roomSelect");
+const spaceSelect    = document.getElementById("spaceSelect");
+const deviceSelect   = document.getElementById("deviceSelect");
+
+const deviceInfo     = document.getElementById("deviceInfo");
+const deviceTable    = document.getElementById("deviceTable");
+
+// ---------------------------------------------------------
+// HELPERS
+// ---------------------------------------------------------
+function populate(select, items) {
+    select.innerHTML = `<option value="">-- Select --</option>`;
+    items.forEach(item => {
+        const opt = document.createElement("option");
+        opt.value = item;
+        opt.textContent = item;
+        select.appendChild(opt);
+    });
+    select.disabled = false;
+}
+
+function resetBelow(select) {
+    const all = [areaSelect, buildingSelect, floorSelect, roomSelect, spaceSelect, deviceSelect];
+    const index = all.indexOf(select);
+    for (let i = index; i < all.length; i++) {
+        all[i].innerHTML = `<option value="">-- Select --</option>`;
+        all[i].disabled = true;
+    }
+    deviceInfo.classList.add("d-none");
+}
+
+// ---------------------------------------------------------
+// CASCADING LOGIC
+// ---------------------------------------------------------
+populate(citySelect, Object.keys(data));
+
+citySelect.addEventListener("change", () => {
+    resetBelow(areaSelect);
+    if (citySelect.value) populate(areaSelect, Object.keys(data[citySelect.value]));
+});
+
+areaSelect.addEventListener("change", () => {
+    resetBelow(buildingSelect);
+    if (areaSelect.value) populate(buildingSelect, Object.keys(data[citySelect.value][areaSelect.value]));
+});
+
+buildingSelect.addEventListener("change", () => {
+    resetBelow(floorSelect);
+    if (buildingSelect.value) populate(floorSelect, Object.keys(data[citySelect.value][areaSelect.value][buildingSelect.value]));
+});
+
+floorSelect.addEventListener("change", () => {
+    resetBelow(roomSelect);
+    if (floorSelect.value) populate(roomSelect, Object.keys(data[citySelect.value][areaSelect.value][buildingSelect.value][floorSelect.value]));
+});
+
+roomSelect.addEventListener("change", () => {
+    resetBelow(spaceSelect);
+    if (roomSelect.value) populate(spaceSelect, Object.keys(data[citySelect.value][areaSelect.value][buildingSelect.value][floorSelect.value][roomSelect.value]));
+});
+
+spaceSelect.addEventListener("change", () => {
+    resetBelow(deviceSelect);
+    if (spaceSelect.value) populate(deviceSelect, Object.keys(data[citySelect.value][areaSelect.value][buildingSelect.value][floorSelect.value][roomSelect.value][spaceSelect.value]));
+});
+
+// ---------------------------------------------------------
+// DEVICE SELECTION → SHOW DEVICE DATA
+// ---------------------------------------------------------
+deviceSelect.addEventListener("change", () => {
+    const city = citySelect.value;
+    const area = areaSelect.value;
+    const building = buildingSelect.value;
+    const floor = floorSelect.value;
+    const room = roomSelect.value;
+    const space = spaceSelect.value;
+    const device = deviceSelect.value;
+
+    if (!device) {
+        deviceInfo.classList.add("d-none");
+        return;
+    }
+
+    const info = data[city][area][building][floor][room][space][device];
+
+    deviceTable.innerHTML = Object.entries(info)
+        .map(([key, value]) => `<tr><th>${key}</th><td>${value}</td></tr>`)
+        .join("");
+
+    deviceInfo.classList.remove("d-none");
+});
+    </script>
+{% endblock %}

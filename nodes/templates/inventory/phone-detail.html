@@ -1,0 +1,169 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pt-0 pb-3">
+        <!-- Header / Breadcrumbs Navbar -->
+        {% include 'inventory/header.html' %}
+        <!-- Side-by-side Layout Grid -->
+        <div class="row g-4 px-0 align-items-stretch">
+            <!-- Left Column: Parent Infrastructure Hierarchy -->
+            <div class="col-12 col-md-5 col-xl-4 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 p-3 h-100 bg-white d-flex flex-column w-100">
+                    <div class="row g-3 text-center mb-4">
+                        <div class="col-6">
+                            <div class="bg-light border rounded-3 p-3 h-100">
+                                <span class="d-block mb-2 fw-semibold">Socket</span>
+                                {% if phone.socket and phone.socket.devices.exists %}
+                                    <a href="{% url 'socket-detail' phone.socket.pk %}" class="fw-semibold text-primary text-decoration-none"><i class="bi bi-ethernet me-1"></i>{{ phone.socket.socket_code }}</a>
+                                {% else %}
+                                    <span class="text-muted">Unlinked</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light border rounded-3 p-3 h-100">
+                                <span class="d-block mb-2 fw-semibold">Usage Type</span>
+                                <span class="badge fw-semibold border rounded-pill px-3 py-1 bg-info-subtle text-info border-info-subtle">{{ phone.get_usage_type_display|default:phone.usage_type|default:"—" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% if phone.space %}
+                        {% with parent_room=phone.space.room %}
+                            <div class="flex-grow-1 d-flex flex-column"><div class="d-flex flex-column gap-2 small">
+                                <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-geo-alt text-primary fs-5"></i><div><span class="text-muted d-block small">City</span><a href="{% url 'city-detail' parent_room.floor.building.area.city.pk %}" class="fw-semibold text-decoration-none link-primary">{{ parent_room.floor.building.area.city.name|capfirst }}</a></div></div>
+                                <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-layers text-primary fs-5"></i><div><span class="text-muted d-block small">Area</span><a href="{% url 'area-detail' parent_room.floor.building.area.pk %}" class="fw-semibold text-decoration-none link-primary">{{ parent_room.floor.building.area.name|capfirst }}</a></div></div>
+                                <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-building text-primary fs-5"></i><div><span class="text-muted d-block small">Building</span><a href="{% url 'building-detail' parent_room.floor.building.pk %}" class="fw-semibold text-decoration-none link-primary">{{ parent_room.floor.building.name|capfirst }}</a></div></div>
+                                <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-grid-1x2 text-primary fs-5"></i><div><span class="text-muted d-block small">Floor Level</span><a href="{% url 'floor-detail' parent_room.floor.pk %}" class="fw-semibold text-decoration-none link-primary">Floor {{ parent_room.floor.floor_number }}</a></div></div>
+                                <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-door-closed text-primary fs-5"></i><div><span class="text-muted d-block small">Room</span><a href="{% url 'room-detail' parent_room.pk %}" class="fw-semibold text-decoration-none link-primary">Room {{ parent_room.room_code }}</a></div></div>
+                                <div class="d-flex align-items-center gap-3 p-2"><i class="bi bi-grid-3x3-gap text-primary fs-5"></i><div><span class="text-muted d-block small">Space</span><a href="{% url 'space-detail' phone.space.pk %}" class="fw-semibold text-decoration-none link-primary">{{ phone.space.name|capfirst }}</a></div></div>
+                            </div></div>
+                        {% endwith %}
+                    {% elif phone.common_area %}
+                        <div class="flex-grow-1 d-flex flex-column"><div class="d-flex flex-column gap-2 small">
+                            <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-geo-alt text-primary fs-5"></i><div><span class="text-muted d-block small">City</span><a href="{% url 'city-detail' phone.common_area.floor.building.area.city.pk %}" class="fw-semibold text-decoration-none link-primary">{{ phone.common_area.floor.building.area.city.name|capfirst }}</a></div></div>
+                            <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-layers text-primary fs-5"></i><div><span class="text-muted d-block small">Area</span><a href="{% url 'area-detail' phone.common_area.floor.building.area.pk %}" class="fw-semibold text-decoration-none link-primary">{{ phone.common_area.floor.building.area.name|capfirst }}</a></div></div>
+                            <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-building text-primary fs-5"></i><div><span class="text-muted d-block small">Building</span><a href="{% url 'building-detail' phone.common_area.floor.building.pk %}" class="fw-semibold text-decoration-none link-primary">{{ phone.common_area.floor.building.name|capfirst }}</a></div></div>
+                            <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle"><i class="bi bi-grid-1x2 text-primary fs-5"></i><div><span class="text-muted d-block small">Floor Level</span><a href="{% url 'floor-detail' phone.common_area.floor.pk %}" class="fw-semibold text-decoration-none link-primary">Floor {{ phone.common_area.floor.floor_number }}</a></div></div>
+                            <div class="d-flex align-items-center gap-3 p-2"><i class="bi bi-signpost-2 text-primary fs-5"></i><div><span class="text-muted d-block small">{{ phone.common_area.get_area_type_display }}</span><a href="{% url 'common-area-detail' phone.common_area.pk %}" class="fw-semibold text-decoration-none link-primary">{{ phone.common_area.name|capfirst }}</a></div></div>
+                        </div></div>
+                    {% else %}
+                        <div class="row g-3 text-center mb-4"><div class="col-12"><div class="bg-light border rounded-3 p-3"><span class="d-block mb-1 fw-semibold">Status</span><span class="fw-bold fs-3 {% if phone.is_active %}text-success{% else %}text-danger{% endif %}">{% if phone.is_active %}Active{% else %}Inactive{% endif %}</span></div></div></div>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Right Column: Full Matrix Parameter Fields Registry Table matching desktop-detail layout -->
+            <div class="col-12 col-md-7 col-xl-8 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white h-100 w-100">
+                    <div class="table-responsive h-100">
+                        <table class="table table-hover align-middle mb-0 h-100">
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-tag text-primary fs-6 me-2"></i>Brand / Model
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {{ phone.brand|capfirst }} {{ phone.model|default:"—" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-qr-code-scan text-primary fs-6 me-2"></i>Serial Key (S/N)
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {{ phone.serial|default:'—' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-hash text-primary fs-6 me-2"></i>Registration Code
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {{ phone.registration_code|default:'—' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-telephone text-primary fs-6 me-2"></i>Phone Type
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {{ phone.get_phone_type_display|default:phone.phone_type|default:'—' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-123 text-primary fs-6 me-2"></i>Phone Number
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if phone.phone_number %}
+                                            {{ phone.phone_number }}
+                                        {% else %}
+                                            <span class="text-muted">Unassigned</span>
+                                        {% endif %}
+                                    </td>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-ethernet text-primary fs-6 me-2"></i>Physical MAC Address
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {{ phone.mac_address|upper|default:'—' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-globe2 text-primary fs-6 me-2"></i>Assigned Static IP Address
+                                    </td>
+                                    <td class="text-end pe-4 font-monospace fw-normal fs-6 text-primary ip-address">
+                                        {% if phone.ip_address %}
+                                            {% url 'phone-detail' phone.pk as detail_url %}
+                                            <a href="{% url 'ping_device' %}?ip={{ phone.ip_address|urlencode }}&amp;return_url={{ detail_url|urlencode }}&amp;brand={{ phone.brand|urlencode }}&amp;model={{ phone.model|urlencode }}&amp;registration_code={{ phone.registration_code|urlencode }}"
+                                               class="text-decoration-none">
+                                                {{ phone.ip_address }} <i class="bi bi-broadcast-pin ms-1 small"></i>
+                                            </a>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-people text-primary fs-6 me-2"></i>User Assignment Identity
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6 text-primary">
+                                        {% for assignment in phone.device_ptr.assignments.all %}
+                                            <a href="{% url 'user-detail' assignment.user.pk %}" class="d-block text-decoration-none fw-semibold">{{ assignment.user.name|capfirst }} {{ assignment.user.surname|capfirst }}</a>
+                                        {% empty %}
+                                            <span class="text-muted fw-normal">No active user assignment profile</span>
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal border-0 align-top">
+                                        <i class="bi bi-usb-plug text-primary fs-6 me-2"></i>Auxiliary Peripherals
+                                    </td>
+                                    <td class="text-end pe-4 border-0">
+                                        {% with peripherals=phone.device_ptr.peripherals.all %}
+                                            {% if peripherals %}
+                                                <div class="d-flex flex-wrap gap-2 justify-content-end text-start">
+                                                    {% for peripheral in peripherals %}
+                                                        <span class="badge bg-light text-dark border border-light-subtle rounded-pill d-inline-flex align-items-center gap-1 px-2 py-2 fw-normal text-nowrap">
+                                                            <i class="bi text-primary {% if peripheral.peripheral_type == 'monitor' %}bi-display{% elif peripheral.peripheral_type == 'keyboard' %}bi-keyboard{% elif peripheral.peripheral_type == 'mouse' %}bi-mouse{% else %}bi-usb-plug{% endif %}"></i>
+                                                            <span class="fw-semibold">{{ peripheral.brand|default:'Peripheral'|capfirst }}</span>
+                                                            <span class="text-muted">({{ peripheral.get_peripheral_type_display }})</span>
+                                                            <span>S/N: {{ peripheral.serial_number|default:'—' }}</span>
+                                                        </span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted fw-normal fs-7">No auxiliary peripherals connected to this device</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

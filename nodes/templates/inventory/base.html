@@ -1,0 +1,483 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="el">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nodes_System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- <link rel="stylesheet" href="https://bootswatch.com/5/spacelab/bootstrap.min.css"> -->
+
+
+    <!-- 1. Core Framework CSS Layout Engine -->
+    <link rel="stylesheet" href="{% static 'nodes/btdt/css/bootstrap.min.css' %}">
+
+    <!-- 2. Custom preset disabled: restore Bootstrap default button colors -->
+    <link id="theme-preset" rel="stylesheet" href="{% static 'nodes/btdt/themes/preset/my-custom-theme.min.css' %}">
+
+    <!-- 3. Dark Mode Blueprint Layer -->
+    <!-- <link id="theme-preset-dark" rel="stylesheet" href="{% static 'nodes/btdt/themes/modes/dark.min.css' %}" media="not all"> -->
+
+    <link rel="stylesheet" href="{% static 'nodes/css/base.css' %}?v=5">
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-primary position-relative z-1">
+    <!-- TOP BAR -->
+    <header class="d-none d-xl-block border-bottom bg-light py-1 px-2 shadow-sm">
+        <div
+            class="container d-flex flex-wrap align-items-center justify-content-between gap-2 small text-dark">
+            <span class="d-inline-flex align-items-center gap-2">
+                <i class="bi bi-person-circle"></i> Under construction: <span class="fw-semibold">Georgios Bres</span>
+            </span>
+            <a href="#" class="text-decoration-none text-dark d-inline-flex align-items-center gap-2">
+                <i class="bi bi-box-arrow-right"></i>  Under construction: <span class="fw-semibold">Sign out</span>
+            </a>
+        </div>
+    </header>
+    <!-- MAIN NAVBAR -->
+    <nav class="navbar navbar-expand-xl navbar-light bg-light shadow-sm py-2 z-3 border-bottom border-1">
+        <div class="container d-flex align-items-center justify-content-between">
+            <a class="navbar-brand me-5 d-flex align-items-center gap-2" href="{% url 'dashboard' %}">
+                <!-- <i class="bi bi-box fs-4"></i> -->
+                <span class="font-monospace fs-4 fw-bold text-dark">Nodes_System</span>
+            </a>
+            <div class="d-flex d-xl-none align-items-center gap-2">
+                <button class="btn btn-outline-secondary rounded-circle p-2 lh-1 border-0 bg-light"
+                    data-bs-toggle="offcanvas" data-bs-target="#mobileSearch" aria-label="Search">
+                    <i class="bi bi-search fs-5 text-dark"></i>
+                </button>
+                <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileNav" aria-label="Menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse align-items-center" id="main-nav">
+                <ul class="navbar-nav align-items-center gap-3 me-auto mb-0">
+                    <!-- Spatial Dropdown -->
+                    <li class="nav-item dropdown border border-success-subtle rounded-3">
+                        <a class="nav-link dropdown-toggle px-3 py-2 fw-medium" href="#" data-bs-toggle="dropdown">
+                            Spatial
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-lg py-2 rounded-3 mt-2">
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'cities-list' %}"><i
+                                    class="bi bi-geo-alt text-success me-2"></i>Cities</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'areas-list' %}"><i class="bi bi-map text-success me-2"></i>Areas</a>
+                                </li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'buildings-list' %}"><i
+                                    class="bi bi-building text-success me-2"></i>Buildings</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'floors-list' %}"><i
+                                    class="bi bi-layers text-success me-2"></i>Floors</a></li>
+                            <li>
+                                <hr class="dropdown-divider my-1 opacity-25">
+                            </li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                        href="{% url 'common-areas-list' %}"><i
+                                            class="bi bi-grid text-success me-2"></i>Common Areas</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                        href="{% url 'rooms-list' %}"><i
+                                            class="bi bi-door-open text-success me-2"></i>Rooms</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'spaces-list' %}"><i
+                                    class="bi bi-grid-3x3-gap text-success me-2"></i>Spaces</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'sockets-list' %}"><i
+                                    class="bi bi-ethernet text-success me-2"></i>Sockets</a></li>
+                        </ul>
+                    </li>
+                    <!-- Organic Dropdown -->
+                    <li class="nav-item dropdown border border-danger-subtle rounded-3">
+                        <a class="nav-link dropdown-toggle px-3 py-2 fw-medium" href="#" data-bs-toggle="dropdown">
+                            Organic
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-lg py-2 rounded-3 mt-2">
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'general-directorates-list' %}"><i
+                                    class="bi bi-diagram-3 text-danger me-2"></i>General Directorate</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'directorates-list' %}"><i
+                                    class="bi bi-diagram-2 text-danger me-2"></i>Directorate</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'departments-list' %}"><i
+                                    class="bi bi-diagram-3 text-danger me-2"></i>Department</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'offices-list' %}"><i
+                                    class="bi bi-briefcase text-danger me-2"></i>Office</a></li>
+                            <li>
+                                <hr class="dropdown-divider my-1 opacity-25">
+                            </li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                        href="{% url 'users-list' %}"><i class="bi bi-people text-danger me-2"></i>Users</a>
+                                </li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                        href="{% url 'assignments-list' %}"><i
+                                            class="bi bi-clipboard-check text-danger me-2"></i>Assignments</a></li>
+                        </ul>
+                    </li>
+                    <!-- Hardware Dropdown -->
+                    <li class="nav-item dropdown border border-primary-subtle rounded-3">
+                        <a class="nav-link dropdown-toggle px-3 py-2 fw-medium" href="#" data-bs-toggle="dropdown">
+                            Hardware
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow-lg py-2 rounded-3 mt-2">
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'desktops-list' %}"><i
+                                        class="bi bi-pc-display text-primary me-2"></i>Desktops</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'allInOnes-list' %}"><i
+                                        class="bi bi-display text-primary me-2"></i>All-In-Ones</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'laptops-list' %}"><i
+                                        class="bi bi-laptop text-primary me-2"></i>Laptops</a></li>
+                            <li>
+                                <hr class="dropdown-divider my-1 opacity-25">
+                            </li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'servers-list' %}"><i
+                                        class="bi bi-server text-primary me-2"></i>Servers</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'switches-list' %}"><i
+                                        class="bi bi-hdd-rack text-primary me-2"></i>Switches</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'access-points-list' %}"><i
+                                        class="bi bi-router text-primary me-2"></i>Access Points</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'phones-list' %}"><i
+                                        class="bi bi-telephone text-primary me-2"></i>Phones</a></li>
+                            <li>
+                                <hr class="dropdown-divider my-1 opacity-25">
+                            </li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'printers-list' %}"><i
+                                        class="bi bi-printer text-primary me-2"></i>Printers</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'upses-list' %}"><i
+                                        class="bi bi-battery-charging text-primary me-2"></i>UPS</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'peripherals-list' %}"><i
+                                        class="bi bi-usb-symbol text-primary me-2"></i>Peripherals</a></li>
+                        </ul>
+                    </li>
+                  
+                    <li class="nav-item dropdown border border-primary-subtle rounded-3 bg-secondary">
+                        <a class="nav-link dropdown-toggle px-3 py-2 fw-medium" href="#" data-bs-toggle="dropdown">
+                            Miscellaneous
+                        </a>
+                        <ul class="dropdown-menu bg-light border-0 shadow-lg py-2 rounded-3 mt-2">
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'workstations-list' %}"><i
+                                    class="bi bi-pc-display-horizontal text-primary me-2"></i>All PCs</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'devices-list' %}"><i
+                                    class="bi bi-hdd-stack text-primary me-2"></i>All devices</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'devices-list' %}?assignment_status=assigned"><i
+                                    class="bi bi-person-check text-primary me-2"></i>Assigned devices</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'devices-list' %}?assignment_status=unassigned"><i
+                                    class="bi bi-person-dash text-primary me-2"></i>Unassigned devices</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'phone-book' %}"><i
+                                    class="bi bi-journal-text text-primary me-2"></i>Phone Book</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'ping-all-devices' %}"><i
+                                    class="bi bi-broadcast-pin text-primary me-2"></i>Ping all</a></li>
+                            <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'material-handover' %}"><i
+                                    class="bi bi-clipboard-check text-primary me-2"></i>Handover report</a></li>
+                                <li><a class="dropdown-item rounded-2 py-2 px-3 pe-5 fw-medium text-nowrap"
+                                    href="{% url 'device-statistics' %}"><i
+                                    class="bi bi-bar-chart-line text-primary me-2"></i>Statistics</a></li>
+                        </ul>
+                    </li>
+                  
+                </ul>
+                <form class="d-flex align-items-center ms-auto mb-0" method="GET" action="{% url 'global-search' %}">
+                    <div class="position-relative">
+                        <i
+                            class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-primary small"></i>
+                        <input
+                            class="form-control form-control-sm rounded-3 py-2 ps-5 pe-3 bg-light text-primary border border-primary shadow-none placeholder-primary"
+                            type="search" name="q" value="{{ query|default:'' }}" placeholder="Node search...">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <!-- MOBILE OFF-CANVAS -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileNav">
+        <div class="offcanvas-header border-bottom bg-light">
+            <span class="fw-bold fs-5">Nodes_System</span>
+            <button type="button" class="btn-close shadow-none" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body px-0">
+            <div class="accordion accordion-flush" id="mobileAccordion">
+                <!-- Spatial Accordion Item -->
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button
+                            class="accordion-button collapsed fw-semibold text-dark border border-success-subtle mobile-nav-category mobile-nav-spatial mobile-nav-accordion-button my-1 rounded-3"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#mobSpatial">
+                            <i class="bi bi-geo-alt-fill text-success me-2"></i> Spatial
+                        </button>
+                    </h2>
+                    <div id="mobSpatial" class="accordion-collapse collapse" data-bs-parent="#mobileAccordion">
+                        <div class="accordion-body pt-0 pb-3 ps-4 d-flex flex-column gap-2">
+                            <span class="small text-uppercase text-secondary fw-bold mt-2">Locations</span>
+                            <a href="{% url 'cities-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-geo-alt text-success"></i>Cities</a>
+                            <a href="{% url 'areas-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-map text-success"></i>Areas</a>
+                            <a href="{% url 'buildings-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-building text-success"></i>Buildings</a>
+                            <a href="{% url 'floors-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-layers text-success"></i>Floors</a>
+                            <span class="small text-uppercase text-secondary fw-bold mt-2">Spaces</span>
+                            <a href="{% url 'common-areas-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-grid text-success"></i>Common Areas</a>
+                            <a href="{% url 'rooms-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-door-open text-success"></i>Rooms</a>
+                            <a href="{% url 'spaces-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-grid-3x3-gap text-success"></i>Spaces</a>
+                            <a href="{% url 'sockets-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-ethernet text-success"></i>Sockets</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Organic Accordion Item -->
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button
+                            class="accordion-button collapsed fw-semibold text-dark border border-danger-subtle mobile-nav-category mobile-nav-organic mobile-nav-accordion-button my-1 rounded-3"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#mobOrganic">
+                            <i class="bi bi-diagram-3-fill text-danger me-2"></i> Organic
+                        </button>
+                    </h2>
+                    <div id="mobOrganic" class="accordion-collapse collapse" data-bs-parent="#mobileAccordion">
+                        <div class="accordion-body pt-0 pb-3 ps-4 d-flex flex-column gap-2">
+                            <span class="small text-uppercase text-secondary fw-bold mt-2">Structure</span>
+                            <a href="{% url 'general-directorates-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-diagram-3 text-danger"></i>General Directorate</a>
+                            <a href="{% url 'directorates-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-diagram-2 text-danger"></i>Directorate</a>
+                            <a href="{% url 'departments-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-diagram-3 text-danger"></i>Department</a>
+                            <a href="{% url 'offices-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-briefcase text-danger"></i>Office</a>
+                            <span class="small text-uppercase text-secondary fw-bold mt-2">Personnel</span>
+                            <a href="{% url 'users-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-people text-danger"></i>Users</a>
+                            <a href="{% url 'assignments-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-clipboard-check text-danger"></i>Assignments</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Hardware Accordion Item -->
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button
+                            class="accordion-button collapsed fw-semibold text-dark border border-primary-subtle mobile-nav-category mobile-nav-hardware mobile-nav-accordion-button my-1 rounded-3"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#mobHardware">
+                            <i class="bi bi-pc-display-horizontal text-primary me-2"></i> Hardware
+                        </button>
+                    </h2>
+                    <div id="mobHardware" class="accordion-collapse collapse" data-bs-parent="#mobileAccordion">
+                        <div class="accordion-body pt-0 pb-3 ps-4 d-flex flex-column gap-2">
+                            <span class="small text-uppercase text-secondary fw-bold mt-2">Computers</span>
+                            <a href="{% url 'desktops-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-pc-display text-primary"></i>Desktops</a>
+                            <a href="{% url 'allInOnes-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-display text-primary"></i>All-In-Ones</a>
+                            <a href="{% url 'laptops-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-laptop text-primary"></i>Laptops</a>
+                            <span class="small text-uppercase text-secondary fw-bold mt-2">Network</span>
+                            <a href="{% url 'servers-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-server text-primary"></i>Servers</a>
+                            <a href="{% url 'switches-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-hdd-rack text-primary"></i>Switches</a>
+                            <a href="{% url 'access-points-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-router text-primary"></i>Access Points</a>
+                            <a href="{% url 'phones-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-telephone text-primary"></i>Phones</a>
+                            <span class="small text-uppercase text-secondary fw-bold mt-2">Peripherals</span>
+                            <a href="{% url 'printers-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-printer text-primary"></i>Printers</a>
+                            <a href="{% url 'upses-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-battery-charging text-primary"></i>UPSes</a>
+                            <a href="{% url 'peripherals-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-usb-symbol text-primary"></i>Peripherals</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion accordion-flush" id="mobileActionsAccordion">
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-semibold text-white bg-primary mobile-nav-accordion-button my-1 rounded-3"
+                                type="button" data-bs-toggle="collapse" data-bs-target="#mobActions">
+                            <i class="bi bi-lightning-charge text-white me-2"></i>Miscellaneous
+                        </button>
+                    </h2>
+                    <div id="mobActions" class="accordion-collapse collapse">
+                        <div class="accordion-body pt-0 pb-3 ps-4 d-flex flex-column gap-2 bg-light">
+                            <a href="{% url 'workstations-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-pc-display-horizontal text-primary"></i>All PCs</a>
+                            <a href="{% url 'devices-list' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-hdd-stack text-primary"></i>All devices</a>
+                            <a href="{% url 'devices-list' %}?assignment_status=assigned"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-person-check text-primary"></i>Assigned devices</a>
+                            <a href="{% url 'devices-list' %}?assignment_status=unassigned"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-person-dash text-primary"></i>Unassigned devices</a>
+                            <a href="{% url 'phone-book' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-journal-text text-primary"></i>Phone Book</a>
+                            <a href="{% url 'ping-all-devices' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-broadcast-pin text-primary"></i>Ping all devices</a>
+                            <a href="{% url 'material-handover' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-clipboard-check text-primary"></i>Handover report</a>
+                            <a href="{% url 'device-statistics' %}"
+                                class="text-decoration-none text-dark d-flex align-items-center gap-2 py-1"><i
+                                    class="bi bi-bar-chart-line text-primary"></i>Statistics</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3 opacity-25">
+            <div class="d-flex align-items-center gap-3 px-4 py-2">
+                <i class="bi bi-person-circle fs-2 text-primary"></i>
+                <div>
+                    <div class="fw-semibold text-dark">Georgios Bres</div>
+                    <div class="small text-secondary">Gen. Directorate of IT</div>
+                </div>
+                <a href="#" class="mobile-user-signout ms-auto text-danger text-decoration-none d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-box-arrow-right fs-5" aria-hidden="true"></i>
+                    <span>Sign out</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- MOBILE SEARCH -->
+    <div class="offcanvas offcanvas-top mobile-search-panel" tabindex="-1" id="mobileSearch">
+        <div class="offcanvas-body d-flex align-items-center p-3 bg-light shadow-sm">
+            <form class="d-flex w-100 align-items-center gap-2 mb-0" method="GET" action="{% url 'global-search' %}">
+                <div class="position-relative flex-grow-1">
+                    <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input class="form-control rounded-3 ps-5 py-2 border shadow-sm placeholder-primary" type="search"
+                        name="q" value="{{ query|default:'' }}" placeholder="Node search">
+                </div>
+                <button type="submit"
+                    class="btn btn-primary rounded-3 p-2 shadow-sm d-inline-flex align-items-center justify-content-center"
+                    aria-label="Search" title="Search">
+                    <i class="bi bi-arrow-right fs-5"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-3 px-3"
+                    data-bs-dismiss="offcanvas">Cancel</button>
+            </form>
+        </div>
+    </div>
+    <!-- MAIN CONTENT -->
+    <div class="flex-grow-1 d-flex flex-column">
+        <div class="container flex-grow-1 d-flex flex-column">
+            <div class="wrapper flex-grow-1 p-4 shadow-sm bg-white">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    <!-- FOOTER -->
+    <footer class="bg-light py-3 mt-auto shadow-sm border-top border-1">
+        <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 text-dark small">
+            <div class="d-flex flex-wrap justify-content-center justify-content-md-start align-items-center gap-2 text-center text-md-start">
+                <span class="fw-semibold font-monospace">Nodes_System</span>
+                <span class="vr bg-secondary mx-2 opacity-25"></span>
+                <span class="font-monospace">v1.0.1</span>
+                <span class="vr bg-secondary mx-2 opacity-25"></span>
+                <span class="">&copy; {% now "Y" %}</span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-end gap-3">
+                <!-- Docs Link -->
+                <a href="#" class="text-decoration-none d-inline-flex align-items-center gap-2"
+                    data-bs-toggle="modal" data-bs-target="#manualModal">
+                    <i class="bi bi-envelope fs-6"></i>
+                    <span class="fw-medium">Docs</span>
+                </a>
+                <span class="vr bg-secondary mx-1 opacity-25"></span>
+
+                <!-- GitHub Link -->
+                <a href="https://github.com/bres" target="_blank"
+                    class="text-decoration-none d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-github fs-6"></i>
+                    <span class="fw-medium">GitHub</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    {% include 'inventory/docs.html' %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('mobileNav')?.addEventListener('shown.bs.collapse', (event) => {
+            if (!window.matchMedia('(max-width: 1199.98px)').matches) return;
+
+            const body = event.target.closest('.offcanvas-body');
+            const section = event.target.closest('.accordion-item');
+            if (!body || !section) return;
+
+            const top = section.getBoundingClientRect().top - body.getBoundingClientRect().top + body.scrollTop;
+            body.scrollTo({ top, behavior: 'smooth' });
+        });
+    </script>
+    {% if location_query %}
+    <script>
+        const locationQuery = new URLSearchParams('{{ location_query|safe }}');
+        document.querySelectorAll('.table a[href]').forEach((link) => {
+            const url = new URL(link.href, document.baseURI);
+            if (!url.searchParams.has('location_type')) {
+                locationQuery.forEach((value, key) => url.searchParams.set(key, value));
+                link.href = url.toString();
+            }
+        });
+    </script>
+    {% endif %}
+
+</body>
+
+</html>

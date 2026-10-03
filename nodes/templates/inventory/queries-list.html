@@ -1,0 +1,56 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'nodes/css/queries.css' %}">
+    <div class="queries-shell">
+        <h1 class="queries-title">Available Queries</h1>
+        <!-- Infrastructure -->
+        <div class="category-card infra">
+            <div class="category-header">Infrastructure</div>
+            <ul class="query-list">
+                <li><a href="/queries/cities/">List all Cities</a></li>
+                <li><a href="/queries/areas/">List all Areas</a></li>
+                <li><a href="/queries/buildings/">List all Buildings</a></li>
+                <li><a href="/queries/floors/">List all Floors</a></li>
+                <li><a href="/queries/rooms/">List all Rooms</a></li>
+                <li><a href="/queries/spaces/">List all Spaces</a></li>
+            </ul>
+        </div>
+        <!-- Organization -->
+        <div class="category-card org">
+            <div class="category-header">Organization</div>
+            <ul class="query-list">
+                <li><a href="/queries/general-directorates/">List all General Directorates</a></li>
+                <li><a href="/queries/directorates/">List all Directorates</a></li>
+                <li><a href="/queries/departments/">List all Departments</a></li>
+                <li><a href="/queries/offices/">List all Offices</a></li>
+                <li><a href="/queries/users/">List all Users</a></li>
+            </ul>
+        </div>
+        <!-- IT Assets -->
+        <div class="category-card it">
+            <div class="category-header">IT Assets</div>
+            <ul class="query-list">
+                <li><a href="/queries/devices/">List all Devices</a></li>
+                <li><a href="/queries/desktops/">List all Desktops</a></li>
+                <li><a href="/queries/laptops/">List all Laptops</a></li>
+                <li><a href="/queries/allinones/">List all All‑in‑Ones</a></li>
+                <li><a href="/queries/servers/">List all Servers</a></li>
+                <li><a href="/queries/printers/">List all Printers</a></li>
+                <li><a href="/queries/switches/">List all Switches</a></li>
+                <li><a href="/queries/phones/">List all Phones</a></li>
+                <li><a href="/queries/ups/">List all UPS Units</a></li>
+                <li><a href="/queries/peripherals/">List all Peripherals</a></li>
+            </ul>
+        </div>
+        <!-- Other -->
+        <div class="category-card other">
+            <div class="category-header">Other</div>
+            <ul class="query-list">
+                <li><a href="/queries/assignments/">List all Assignments</a></li>
+                <li><a href="/queries/all/">List all Queries</a></li>
+                <li><a href="/queries/general-info/">General Information</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

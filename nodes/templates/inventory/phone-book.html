@@ -1,0 +1,56 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+<div class="container-fluid">
+    {% include 'inventory/header.html' %}
+
+    <div class="table-responsive border rounded-3 bg-white">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="px-4 py-3">User</th>
+                    <th class="py-3">Personal Phone</th>
+                    <th class="py-3">Assigned Phone / Socket</th>
+                    <th class="py-3">Phone Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in phone_book_entries %}
+                    <tr>
+                        <td class="px-4 py-3">
+                            <div class="fw-semibold">{{ entry.full_name|capfirst }}</div>
+                            <a class="small text-muted text-decoration-none" href="mailto:{{ entry.email }}">{{ entry.email }}</a>
+                        </td>
+                        <td class="py-3 font-monospace">
+                            {% if entry.personal_phone %}
+                                <a class="text-decoration-none" href="tel:{{ entry.personal_phone }}">{{ entry.personal_phone }}</a>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3 font-monospace">
+                            {% if entry.phone_number %}
+                                <a class="text-decoration-none" href="tel:{{ entry.phone_number }}">{{ entry.phone_number }}</a>
+                            {% elif entry.has_phone %}
+                                <span class="text-muted">No number listed</span>
+                            {% else %}
+                                <span class="text-muted">No phone assigned</span>
+                            {% endif %}
+                            {% if entry.socket_code %}
+                                <span class="text-muted mx-1">/</span>
+                                <span title="Assigned socket">{{ entry.socket_code }}</span>
+                            {% endif %}
+                        </td>
+                        <td class="py-3">
+                            {% if entry.location %}{{ entry.location }}{% else %}<span class="text-muted">—</span>{% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">No active users found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

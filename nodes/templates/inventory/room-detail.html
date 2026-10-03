@@ -1,0 +1,226 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pt-0 pb-3">
+        <!-- Header / Breadcrumbs Navbar -->
+        {% include 'inventory/header.html' %}
+        <div class="row g-4 px-0 align-items-stretch">
+            <!-- Left Column: Structural & Context Panel -->
+            <div class="col-12 col-md-5 col-xl-4 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 p-3 h-100 bg-white d-flex flex-column w-100">
+                    <!-- Two-Metric Stats Grid matching room properties -->
+                    <div class="row g-3 text-center mb-4">
+                        <div class="col-6">
+                            <div class="bg-light border rounded-3 p-3">
+                                <span class="d-block mb-1 fw-semibold">Spaces</span>
+                                <span class="fw-bold fs-3 d-flex align-items-center justify-content-center gap-1">
+                                    <i class="bi bi-grid-1x2 text-primary fs-4"></i>
+                                    {% if room.spaces_count %}
+                                        {% if room.spaces_count %}<a href="{% url 'spaces-list' %}?{{ location_query }}" class="text-decoration-none">{{ room.spaces_count }}</a>{% else %}{{ room.spaces_count|default:0 }}{% endif %}
+                                    {% else %}
+                                        {{ room.spaces_count|default:0 }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light border rounded-3 p-3">
+                                <span class="d-block mb-1 fw-semibold">LAN Sockets</span>
+                                <span class="fw-bold fs-3 d-flex align-items-center justify-content-center gap-1">
+                                    <i class="bi bi-ethernet text-primary fs-4 me-1"></i>
+                                    {% if room.sockets_count %}
+                                        {% if room.sockets_count %}<a href="{% url 'sockets-list' %}?{{ location_query }}" class="text-decoration-none">{{ room.sockets_count }}</a>{% else %}{{ room.sockets_count|default:0 }}{% endif %}
+                                    {% else %}
+                                        {{ room.sockets_count|default:0 }}
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Parent Infrastructure Hierarchy Stack -->
+                    <div class="flex-grow-1 d-flex flex-column">
+                        <div class="d-flex flex-column gap-2 small">
+                            <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle">
+                                <i class="bi bi-geo-alt text-primary fs-5"></i>
+                                <div>
+                                    <span class="text-muted d-block x-small">City Matrix</span>
+                                    <span class="fw-semibold text-dark">{{ room.floor.building.area.city.name|capfirst }}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle">
+                                <i class="bi bi-layers text-primary fs-5"></i>
+                                <div>
+                                    <span class="text-muted d-block x-small">Area Zone Node</span>
+                                    <span class="fw-semibold text-dark">{{ room.floor.building.area.name|capfirst }}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 p-2 border-bottom border-light-subtle">
+                                <i class="bi bi-building text-primary fs-5"></i>
+                                <div>
+                                    <span class="text-muted d-block x-small">Building Matrix</span>
+                                    <a href="{% url 'building-detail' room.floor.building.pk %}"
+                                       class="fw-semibold text-decoration-none link-primary">
+                                        {{ room.floor.building.name|capfirst }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 p-2">
+                                <i class="bi bi-grid-1x2 text-primary fs-5"></i>
+                                <div>
+                                    <span class="text-muted d-block x-small">Floor Level</span>
+                                    <a href="{% url 'floor-detail' room.floor.pk %}"
+                                       class="fw-semibold text-decoration-none link-primary">
+                                        Floor {{ room.floor.floor_number }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column: Room Inventory Matrix Metrics -->
+            <div class="col-12 col-md-7 col-xl-8 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white h-100 w-100">
+                    <div class="table-responsive h-100">
+                        <table class="table table-hover align-middle mb-0 h-100">
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-pc-display text-primary fs-6 me-2"></i>Desktop Workstations
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6 w-20p">
+                                        {% if room.desktops_count %}
+                                            <a href="{% url 'desktops-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.desktops_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.desktops_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-display text-primary fs-6 me-2"></i>All-in-One Stations
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.allinones_count %}
+                                            <a href="{% url 'allInOnes-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.allinones_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.allinones_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-laptop text-primary fs-6 me-2"></i>Laptops
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.laptops_count %}
+                                            <a href="{% url 'laptops-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.laptops_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.laptops_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-server text-primary fs-6 me-2"></i>Servers
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.servers_count %}
+                                            <a href="{% url 'servers-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.servers_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.servers_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-keyboard text-primary fs-6 me-2"></i>Peripherals
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.peripherals_count %}
+                                            <a href="{% url 'peripherals-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.peripherals_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.peripherals_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-printer text-primary fs-6 me-2"></i>Printer Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.printers_count %}
+                                            <a href="{% url 'printers-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.printers_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.printers_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-battery-charging text-primary fs-6 me-2"></i>UPS Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.ups_count %}
+                                            <a href="{% url 'upses-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.ups_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.ups_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-hdd-network text-primary fs-6 me-2"></i>Network Switches
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.switches_count %}
+                                            <a href="{% url 'switches-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.switches_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.switches_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-wifi text-primary fs-6 me-2"></i>Access Points
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.accesspoints_count %}
+                                            <a href="{% url 'access-points-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.accesspoints_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.accesspoints_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-telephone text-primary fs-6 me-2"></i>Phone Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if room.phones_count %}
+                                            <a href="{% url 'phones-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.phones_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.phones_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal border-0">
+                                        <i class="bi bi-ethernet text-primary fs-6 me-2"></i>Sockets
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6 border-0">
+                                        {% if room.sockets_count %}
+                                            <a href="{% url 'sockets-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ room.sockets_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ room.sockets_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

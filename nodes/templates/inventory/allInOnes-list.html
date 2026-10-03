@@ -1,0 +1,107 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pb-3">
+        {% include 'inventory/header.html' %}
+        <!-- Table View Card Container -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover">
+                            <thead class="table-light border-bottom border-light-subtle text-uppercase small">
+                                <tr>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-start ps-3 text-nowrap w-50">Brand</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Model</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Serial</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Reg. Code</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">IP Address</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Active User</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Usage Type</th>
+                                    <th scope="col"
+                                        class="py-3 text-center text-secondary fw-semibold text-nowrap px-3">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-secondary fs-6">
+                                {% for aio in allinones %}
+                                    <tr class="border-bottom">
+                                        <!-- Brand -->
+                                        <td class="py-3 bg-transparent text-start ps-3 text-nowrap">
+                                            <a href="{% url 'allInOne-detail' aio.pk %}"
+                                               class="text-primary text-decoration-none fw-semibold">
+                                                {{ aio.brand|capfirst }}
+                                            </a>
+                                        </td>
+                                        <!-- Model -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3 bg-transparent">
+                                            {{ aio.model|capfirst }}
+                                        </td>
+                                        <!-- Serial -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3">{{ aio.serial }}</td>
+                                        <!-- Registration Code -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3">{{ aio.registration_code }}</td>
+                                        <!-- IP Address -->
+                                        <td class="py-3 text-center text-nowrap px-3 text-primary font-monospace">
+                                            <a href="{% url 'ping_device' %}?ip={{ aio.ip_address|urlencode }}"
+                                               class="text-decoration-none text-primary font-monospace">
+                                                {{ aio.ip_address }}
+                                            </a>
+                                        </td>
+                                        <!-- Active User -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3">
+                                            {% for assignment in aio.device_ptr.assignments.all %}
+                                                {{ assignment.user.name|capfirst }} {{ assignment.user.surname|capfirst }}
+                                            {% empty %}
+                                                <span class="text-muted fw-normal">Unassigned</span>
+                                            {% endfor %}
+                                        </td>
+                                        <!-- Usage Type Badge -->
+                                        <td class="py-3 text-center text-nowrap px-3">
+                                            <span class="badge fw-normal border rounded-pill px-2.5 py-1 {% if aio.usage_type == 'office' %} bg-primary-subtle text-primary border-primary-subtle {% elif aio.usage_type == 'laboratory' %} bg-success-subtle text-success border-success-subtle {% elif aio.usage_type == 'warehouse' %} bg-warning-subtle text-warning border-warning-subtle {% elif aio.usage_type == 'serverRoom' %} bg-info-subtle text-info border-info-subtle {% else %} bg-secondary-subtle text-secondary border-secondary-subtle {% endif %}">
+                                                <i class="bi me-1 {% if aio.usage_type == 'office' %} bi-briefcase {% elif aio.usage_type == 'laboratory' %} bi-flask {% elif aio.usage_type == 'warehouse' %} bi-bookshelf {% elif aio.usage_type == 'serverRoom' %} bi-server {% else %} bi-question-circle {% endif %}">
+                                                </i>
+                                                {% if aio.usage_type == 'serverRoom' %}Server Room{% else %}{{ aio.usage_type|capfirst }}{% endif %}
+                                            </span>
+                                        </td>
+                                        <!-- Actions -->
+                                        <td class="text-center py-3 text-nowrap px-3">
+                                            <a href="{% url 'allInOne-detail' aio.pk %}"
+                                               class="btn btn-link text-secondary p-1 rounded-2 d-inline-flex align-items-center justify-content-center text-decoration-none"
+                                               title="View details"
+                                               style="width: 32px;
+                                                      height: 32px">
+                                                <i class="bi bi-eye fs-5 text-primary"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="8" class="text-center py-5 text-muted bg-transparent">
+                                            <div class="p-4">
+                                                <i class="{{ page_icon }} text-primary fs-1 d-block mb-2"></i>
+                                                <h6 class="fw-semibold text-primary mb-1">No All-in-Ones Registered</h6>
+                                                <p class="small text-muted mb-3">No All-in-One devices found in the system registry.</p>
+                                                <a href="{% url 'new-allInOne' %}"
+                                                   class="btn btn-sm btn-success rounded-3 px-3 py-2 fw-semibold">
+                                                    <i class="bi bi-plus-lg me-1"></i>Add All-in-One
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+```[cite: 26]

@@ -1,0 +1,120 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pb-3">
+        {% include 'inventory/header.html' %}
+        <!-- Table View Card Container -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0 table-hover">
+                            <thead class="table-light border-bottom border-light-subtle text-uppercase small">
+                                <tr>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-start ps-3 text-nowrap w-50">Brand</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Model</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Serial</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Reg. Code</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">IP Address</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Active User</th>
+                                    <th scope="col"
+                                        class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Usage Type</th>
+                                    <th scope="col"
+                                        class="py-3 text-center text-secondary fw-semibold text-nowrap px-3">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-secondary fs-6">
+                                {% for desktop in desktops %}
+                                    <tr class="border-bottom">
+                                        <!-- Brand -->
+                                        <td class="py-3 bg-transparent text-start ps-3 text-nowrap">
+                                            <a href="{% url 'desktop-detail' desktop.pk %}"
+                                               class="text-primary text-decoration-none">
+                                                {{ desktop.brand|capfirst }}
+                                            </a>
+                                        </td>
+                                        <!-- Model -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3">{{ desktop.model|capfirst }}</td>
+                                        <!-- Serial Code -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3">{{ desktop.serial }}</td>
+                                        <!-- Registration Code -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3">{{ desktop.registration_code }}</td>
+                                        <!-- Network Specs -->
+                                        <td class="py-3 text-center text-nowrap px-3 text-primary font-monospace">
+                                            <a href="{% url 'ping_device' %}?ip={{ desktop.ip_address|urlencode }}"
+                                               class="text-decoration-none text-primary font-monospace">
+                                                {{ desktop.ip_address }}
+                                            </a>
+                                        </td>
+                                        <!-- Active User -->
+                                        <td class="py-3 text-muted text-center text-nowrap px-3">
+                                            {% for assignment in desktop.device_ptr.assignments.all %}
+                                                {{ assignment.user.name|capfirst }} {{ assignment.user.surname|capfirst }}
+                                            {% empty %}
+                                                <span class="text-muted">Unassigned</span>
+                                            {% endfor %}
+                                        </td>
+                                        <!-- Usage Type Badge -->
+                                        <td class="py-3 text-center text-nowrap px-3">
+                                            {% if desktop.usage_type == 'office' %}
+                                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-1">
+                                                    <i class="bi bi-briefcase me-1"></i>Office
+                                                </span>
+                                            {% elif desktop.usage_type == 'laboratory' %}
+                                                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1">
+                                                    <i class="bi bi-flask me-1"></i>Laboratory
+                                                </span>
+                                            {% elif desktop.usage_type == 'warehouse' %}
+                                                <span class="badge bg-warning-subtle text-warning border border-warning-subtle rounded-pill px-2 py-1">
+                                                    <i class="bi bi-bookshelf me-1"></i>Warehouse
+                                                </span>
+                                            {% elif desktop.usage_type == 'serverRoom' %}
+                                                <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-2 py-1">
+                                                    <i class="bi bi-server me-1"></i>Server Room
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-2 py-1">
+                                                    <i class="bi bi-question-circle me-1"></i>{{ desktop.usage_type|capfirst }}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <!-- Actions -->
+                                        <td class="text-center py-3 text-nowrap px-3">
+                                            <a href="{% url 'desktop-detail' desktop.pk %}"
+                                               class="btn btn-link text-secondary p-1 rounded-2 d-inline-flex align-items-center justify-content-center text-decoration-none"
+                                               title="View details"
+                                               style="width: 32px;
+                                                      height: 32px">
+                                                <i class="bi bi-eye fs-5 text-primary"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="9" class="text-center py-5 text-muted bg-transparent">
+                                            <div class="p-4">
+                                                <i class="{{ page_icon }} text-primary fs-1 d-block mb-2"></i>
+                                                <h6 class="fw-semibold text-primary mb-1">No Desktops Registered</h6>
+                                                <p class="small text-muted mb-3">No desktops found in the system hardware registry inventory.</p>
+                                                <a href="{% url 'new-desktop' %}"
+                                                   class="btn btn-sm btn-success rounded-3 px-3 py-2 fw-semibold">
+                                                    <i class="bi bi-plus-lg me-1"></i>Add Desktop
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

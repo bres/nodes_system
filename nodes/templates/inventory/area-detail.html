@@ -1,0 +1,185 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pt-0 pb-3">
+        {% include 'inventory/header.html' %}
+        <div class="row g-4 px-0 align-items-stretch">
+            <div class="col-12 col-md-5 col-xl-4 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 p-4 h-100 bg-white d-flex flex-column w-100">
+                    <div class="text-uppercase fw-bold mb-4 text-tracked">Structural Breakdown</div>
+                    <div class="row g-3 text-center mb-4">
+                        <div class="col-12">
+                            <div class="bg-light border rounded-3 p-3">
+                                <span class="text-primary d-block mb-1 fw-semibold">Buildings</span>
+                                <span class="fw-bold fs-3 text-dark d-flex align-items-center justify-content-center gap-1">
+                                    <i class="bi bi-building text-warning fs-4 me-1"></i>
+                                    {% if area.buildings_count %}<a href="{% url 'buildings-list' %}?{{ location_query }}" class="text-decoration-none">{{ area.buildings_count }}</a>{% else %}{{ area.buildings_count|default:0 }}{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-4 mt-0 text-primary opacity-25">
+                    <div class="flex-grow-1 d-flex flex-column">
+                        <div class="text-uppercase fw-bold mb-2 text-tracked">Geographic Location</div>
+                        <!-- Google Maps Iframe Container -->
+                        <div class="border border-light-subtle rounded-3 overflow-hidden bg-light position-relative flex-grow-1 min-h-260">
+                            {% with address_query=area.name|add:", "|add:area.city.name %}
+                                <iframe width="100%"
+                                        height="100%"
+                                        class="border-0"
+                                        loading="lazy"
+                                        allowfullscreen
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        src="https://maps.google.com/maps?q={{ address_query|urlencode }}&t=&z=13&ie=UTF8&iwloc=&output=embed">
+                                </iframe>
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-7 col-xl-8 d-flex flex-column">
+                <!-- Added d-flex flex-column to the card so it behaves consistently -->
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white h-100 w-100">
+                    <div class="table-responsive h-100">
+                        <table class="table table-hover align-middle mb-0 h-100">
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-pc-display fs-6 me-2 text-primary"></i>Desktop Workstations
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6 w-20p">
+                                        {% if area.desktops_count %}
+                                            <a href="{% url 'desktops-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.desktops_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.desktops_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-display text-primary fs-6 me-2"></i>All-in-One Stations
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal text-dark fs-6">
+                                        {% if area.allinones_count %}
+                                            <a href="{% url 'allInOnes-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.allinones_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.allinones_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-laptop text-primary fs-6 me-2"></i>Laptops
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.laptops_count %}
+                                            <a href="{% url 'laptops-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.laptops_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.laptops_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-server text-primary fs-6 me-2"></i>Servers
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.servers_count %}
+                                            <a href="{% url 'servers-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.servers_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.servers_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-keyboard text-primary fs-6 me-2"></i>Peripherals
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.peripherals_count %}
+                                            <a href="{% url 'peripherals-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.peripherals_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.peripherals_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-printer text-primary fs-6 me-2"></i>Printer Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.printers_count %}
+                                            <a href="{% url 'printers-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.printers_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.printers_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-battery-charging text-primary fs-6 me-2"></i>UPS Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.ups_count %}
+                                            <a href="{% url 'upses-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.ups_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.ups_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-hdd-network text-primary fs-6 me-2"></i>Network Switches
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.switches_count %}
+                                            <a href="{% url 'switches-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.switches_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.switches_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-wifi text-primary fs-6 me-2"></i>Access Points
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.accesspoints_count %}
+                                            <a href="{% url 'access-points-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.accesspoints_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.accesspoints_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-telephone text-primary fs-6 me-2"></i>Phone Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if area.phones_count %}
+                                            <a href="{% url 'phones-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.phones_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.phones_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal border-0">
+                                        <i class="bi bi-ethernet text-primary fs-6 me-2"></i>Sockets
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6 border-0">
+                                        {% if area.sockets_count %}
+                                            <a href="{% url 'sockets-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ area.sockets_count }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ area.sockets_count }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

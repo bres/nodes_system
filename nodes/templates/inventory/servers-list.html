@@ -1,0 +1,64 @@
+{% extends 'inventory/base.html' %}
+{% load static header_helpers %}
+{% block content %}
+    <div class="container-fluid">
+        {% include 'inventory/header.html' %}
+        <div class="card shadow-sm rounded-3 overflow-hidden bg-white">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0 table-hover">
+                    <thead class="table-light border-bottom border-light-subtle text-uppercase small">
+                        <tr>
+                            <th scope="col" class="py-3 text-secondary fw-semibold text-start ps-3 w-50">Server Name</th>
+                            <th scope="col" class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-auto">Model</th>
+                            <th scope="col" class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-20p">Serial Number</th>
+                            <th scope="col" class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-20p">Reg. Code</th>
+                            <th scope="col" class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-20p">IP Address</th>
+                            <th scope="col" class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-20p">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-secondary fs-6">
+                        {% for server in servers %}
+                            <tr class="border-bottom">
+                                <td class="py-3 text-start ps-3 bg-transparent">
+                                    <a href="{% url 'server-detail' server.pk %}" class="fw-semibold text-primary text-decoration-none">{{ server.brand|capfirst|default:"—" }}</a>
+                                </td>
+                                <td class="text-center py-3 text-muted text-nowrap px-3 bg-transparent">{{ server.model|capfirst|default:"—" }}</td>
+                                <td class="text-center py-3 text-muted text-nowrap px-3">{{ server.serial_number|default:"—" }}</td>
+                                <td class="text-center py-3 text-muted text-nowrap px-3">{{ server.registration_code|default:"—" }}</td>
+                                <td class="text-center py-3 text-nowrap px-3 text-primary font-monospace">
+                                    {% if server.ip_address %}
+                                        <a href="{% url 'ping_device' %}?ip={{ server.ip_address|urlencode }}"
+                                           class="text-decoration-none text-primary font-monospace">
+                                            {{ server.ip_address }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center py-3 text-nowrap px-3">
+                                    <a href="{% url 'server-detail' server.pk %}" class="text-secondary p-1 link-secondary rounded-2 d-inline-flex align-items-center justify-content-center" title="View details">
+                                        <i class="bi bi-eye fs-5 text-primary"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted bg-transparent">
+                                    <div class="py-4">
+                                        <i class="{{ page_icon }} text-primary fs-1 d-block mb-3"></i>
+                                        <h6 class="fw-semibold text-primary mb-1">No Servers Registered</h6>
+                                        <p class="small text-muted mb-3">Get started by creating your first server record.</p>
+                                        <a href="{% url 'new-server' %}"
+                                           class="btn btn-sm btn-success rounded-3 px-3 py-2 fw-semibold">
+                                            <i class="bi bi-plus-lg me-1"></i>Add Server
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

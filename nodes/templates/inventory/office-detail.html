@@ -1,0 +1,93 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pt-0 pb-3">
+        <!-- Header / Breadcrumbs Navbar -->
+        {% include 'inventory/header.html' %}
+        <!-- Side-by-side Layout -->
+        <div class="row g-4 px-0 align-items-stretch">
+            <!-- Left Column: Structural & Context Panel -->
+            <div class="col-12 col-md-4 col-xl-3 d-flex">
+                <div class="card shadow-sm rounded-3 p-3 w-100 bg-white d-flex flex-column">
+                    <div class="text-uppercase text-muted fw-bold mb-2 small text-tracked small-075">Staffing & Allocations</div>
+                    <!-- Metrics Grid -->
+                    <div class="row g-2 text-center mb-3">
+                        <div class="col-12">
+                            <div class="bg-light border rounded-3 p-1 py-2">
+                                <span class="text-muted small d-block mb-1 fw-semibold"
+                                      style="font-size: 0.7rem">Assigned Personnel</span>
+                                {% if office.users_count %}<a href="{% url 'users-list' %}?office={{ office.pk }}" class="fw-bold fs-5 text-dark text-decoration-none link-primary d-block">{{ office.users_count }}</a>{% else %}<span class="fw-bold fs-5 text-secondary d-block">0</span>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-3 mt-0 text-muted opacity-25">
+                    <!-- Organisational Hierarchy Stack -->
+                    <div class="flex-grow-1 d-flex flex-column">
+                        <div class="text-uppercase text-muted fw-bold mb-2 small text-tracked small-075">Location Hierarchy Trace</div>
+                        <div class="d-flex flex-column gap-2 small">
+                            <!-- Root Level -->
+                            <div class="d-flex align-items-center gap-3 py-1 px-1 border-bottom border-light-subtle">
+                                <i class="bi bi-bank text-primary fs-6"></i>
+                                <div>
+                                    <span class="text-muted d-block text-xs">Root Directorate Node</span>
+                                    <a href="{% url 'general-directorate-detail' office.department.directorate.general_directorate.pk %}" class="fw-semibold text-dark text-decoration-none link-primary small-085">Gen. Dir. of {{ office.department.directorate.general_directorate.name|capfirst }}</a>
+                                </div>
+                            </div>
+                            <!-- Division Level -->
+                            <div class="d-flex align-items-center gap-3 py-1 px-1 border-bottom border-light-subtle">
+                                <i class="bi bi-diagram-2 text-primary fs-6"></i>
+                                <div>
+                                    <span class="text-muted d-block text-xs">Division Node</span>
+                                    <a href="{% url 'directorate-detail' office.department.directorate.pk %}" class="fw-semibold text-dark text-decoration-none link-primary small-085">{{ office.department.directorate.name|capfirst }}</a>
+                                </div>
+                            </div>
+                            <!-- Department Level -->
+                            <div class="d-flex align-items-center gap-3 py-1 px-1 border-bottom border-light-subtle">
+                                <i class="bi bi-node-minus text-primary fs-6"></i>
+                                <div>
+                                    <span class="text-muted d-block text-xs">Department Node</span>
+                                    <a href="{% url 'department-detail' office.department.pk %}" class="fw-semibold text-dark text-decoration-none link-primary small-085">{{ office.department.name|capfirst }}</a>
+                                </div>
+                            </div>
+                            <!-- Current Node -->
+                            <div class="d-flex align-items-center gap-3 py-1 px-1">
+                                <i class="bi bi-briefcase text-primary fs-6"></i>
+                                <div>
+                                    <span class="text-muted d-block text-xs">Current Workspace Node</span>
+                                    <a href="{% url 'office-detail' office.pk %}" class="fw-semibold text-dark text-decoration-none link-primary small-085">{{ office.name|capfirst }}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column: Office Fields Matrix -->
+            <div class="col-12 col-md-8 col-xl-9 d-flex">
+                <div class="card shadow-sm rounded-3 p-3 bg-white w-100 h-100 d-flex flex-column">
+                    <div class="row g-3 h-100 flex-grow-1">
+                        <div class="col-12 d-flex flex-column">
+                            <div class="bg-light border rounded-3 p-4 text-center h-100 d-flex flex-column justify-content-center flex-grow-1">
+                                <span class="text-muted small d-block mb-2 fw-semibold text-uppercase tracking-wide">
+                                    <i class="bi bi-hash text-primary fs-5 me-1"></i>Office Name
+                                </span>
+                                <a href="{% url 'office-detail' office.pk %}" class="fw-bold fs-3 text-dark text-decoration-none link-primary d-block">{{ office.name }}</a>
+                            </div>
+                        </div>
+                        <div class="col-12 d-flex flex-column">
+                            <div class="bg-light border rounded-3 p-4 text-center h-100 d-flex flex-column justify-content-center flex-grow-1">
+                                <span class="text-muted small d-block mb-2 fw-semibold text-uppercase tracking-wide">
+                                    <i class="bi bi-people text-primary fs-5 me-1"></i>Assigned Personnel
+                                </span>
+                                {% if office.users_count and office.users_count > 0 %}
+                                    <a href="{% url 'users-list' %}?office={{ office.pk }}" class="fw-bold fs-2 text-dark text-decoration-none link-primary d-block">{{ office.users_count }}</a>
+                                {% else %}
+                                    <span class="fw-bold fs-2 text-dark d-block">0</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    @media print {
+        @page {
+            size: A4 portrait;
+            margin: 12mm;
+        }
+
+        body { background: #fff !important; }
+        body > header,
+        body > nav,
+        body > footer,
+        .navbar,
+        .offcanvas,
+        footer,
+        .no-print { display: none !important; }
+        html, body { width: 210mm !important; min-height: 297mm !important; }
+        .container, .container-fluid, .wrapper, .flex-grow-1 {
+            width: 100% !important;
+            max-width: none !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        .wrapper { padding: 0 !important; box-shadow: none !important; }
+        .handover-report,
+        .handover-report * {
+            visibility: visible !important;
+        }
+        .handover-report {
+            display: block !important;
+            position: static !important;
+            width: 100% !important;
+            max-width: none !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            font-size: 10pt !important;
+            line-height: 1.25 !important;
+        }
+        .handover-report,
+        .handover-report table,
+        .handover-report th {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+        .handover-report table thead th {
+            background-color: #dce6f2 !important;
+            box-shadow: inset 0 0 0 1000px #dce6f2 !important;
+        }
+        .handover-report .report-header {
+            margin-bottom: 10mm !important;
+        }
+        .handover-report h1 { margin-bottom: 5mm !important; }
+        .handover-report table {
+            width: 100% !important;
+            margin-bottom: 5mm !important;
+            table-layout: fixed;
+        }
+        .handover-report .materials-table th:nth-child(1),
+        .handover-report .materials-table td:nth-child(1) { width: 6%; }
+        .handover-report .materials-table th:nth-child(2),
+        .handover-report .materials-table td:nth-child(2) { width: 39%; }
+        .handover-report .materials-table th:nth-child(3),
+        .handover-report .materials-table td:nth-child(3) { width: 20%; }
+        .handover-report .materials-table th:nth-child(4),
+        .handover-report .materials-table td:nth-child(4) { width: 13%; }
+        .handover-report .materials-table th:nth-child(5),
+        .handover-report .materials-table td:nth-child(5) { width: 22%; }
+        .handover-report td,
+        .handover-report th {
+            padding: 2.2mm 2.5mm !important;
+            line-height: 1.2 !important;
+            vertical-align: middle !important;
+        }
+        .handover-report .notice {
+            margin: 0 0 5mm !important;
+            line-height: 1.25 !important;
+        }
+        .handover-report .materials-table {
+            margin-bottom: 8mm !important;
+        }
+        .handover-report .signatures {
+            page-break-inside: avoid;
+        }
+        .handover-report .signature-line {
+            min-height: 16mm;
+        }
+    }
+    .handover-report { max-width: 1100px; margin: 0 auto; color: #111; }
+    .report-header { min-height: 105px; }
+    .report-brand { display: flex; flex-direction: column; align-items: flex-start; }
+    .report-logo { width: 160px; height: auto; margin-bottom: 8px; }
+    .report-office { margin-top: 10px; }
+    .report-date { padding-top: 18px; white-space: nowrap; }
+    .handover-report table { border-color: #111; }
+    .handover-report th { background-color: #dce6f2; }
+    .signature-line { min-height: 70px; }
+</style>
+
+<div class="handover-report card shadow-sm rounded-3 bg-white p-3 p-md-4">
+    <div class="no-print d-flex justify-content-between align-items-center mb-3">
+        <a href="{% url 'material-handover' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> New report
+        </a>
+        <button type="button" class="btn btn-primary" onclick="window.print()">
+            <i class="bi bi-printer me-1"></i> Print report
+        </button>
+    </div>
+
+    <div class="report-header d-flex justify-content-between align-items-start mb-4">
+        <div class="report-brand">
+        </div>
+        <div class="report-date fw-bold">DATE : {{ report_date|date:'d-m-Y' }}</div>
+    </div>
+
+    <h1 class="h4 text-center text-uppercase text-decoration-underline fw-bold fst-italic mb-4">Receipt Report - Material Handover</h1>
+
+    <table class="table table-bordered mb-4">
+        <thead><tr><th class="text-center text-uppercase fw-bold">Material Charge Details</th></tr></thead>
+        <tbody>
+            <tr><td>General directorate: {{ report_user_values.general_directorate }}</td></tr>
+            <tr><td>Directorate: {{ report_user_values.directorate }}</td></tr>
+            <tr><td>Department: {{ report_user_values.department }}</td></tr>
+            <tr><td>Office: {{ report_user_values.office }}</td></tr>
+            <tr><td>Full name: {{ report_user_values.full_name }}</td></tr>
+            <tr><td>Phone-Email: {{ report_user_values.phone_email }}</td></tr>
+            <tr><td>Comments: {{ comments|default:'Unregistered' }}</td></tr>
+        </tbody>
+    </table>
+
+    <p class="notice mb-4">
+        The assets detailed in this document are issued exclusively to the user to fulfill the operational requirements of the specified Directorate or program. Should the user undergo any change in duty status—such as an internal transfer, secondment, or reassignment—they are obligated to return all listed items to the warehouse (Attn: Ioannis Mantas | Tel: +30 210-5212864 | Email: i.mantas@eody.gov.gr).
+    </p>
+
+    <table class="materials-table table table-bordered align-middle mb-5">
+        <thead>
+            <tr><th class="text-center text-uppercase fw-bold text-nowrap">No.</th><th class="text-uppercase fw-bold">Device</th><th class="text-uppercase fw-bold text-nowrap">Serial Number</th><th class="text-center text-uppercase fw-bold text-nowrap">Quantity</th><th class="text-uppercase fw-bold">Comments</th></tr>
+        </thead>
+        <tbody>
+            {% for device in selected_devices %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td>{{ device.get_specific_device.device_label|default:device.brand }} {{ device.model|default:'' }}</td>
+                    <td>{{ device.serial|default:'Unregistered' }}</td>
+                    <td class="text-center">1</td>
+                    <td></td>
+                </tr>
+                {% for peripheral in device.peripherals.all %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}.{{ forloop.parentloop.counter }}</td>
+                        <td>{{ peripheral.get_peripheral_type_display|default:peripheral.peripheral_type|capfirst }}</td>
+                        <td>{{ peripheral.serial_number|default:'Unregistered' }}</td>
+                        <td class="text-center">1</td>
+                        <td>{{ peripheral.brand|default:'—' }} {{ peripheral.model|default:'' }}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+            {% for empty_row in '12345' %}
+                {% if forloop.counter > selected_devices|length %}<tr><td class="text-center">{{ forloop.counter }}</td><td></td><td></td><td></td><td></td></tr>{% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="signatures row text-center g-4 fs-5">
+        <div class="col">Giver<div class="signature-line"></div></div>
+        <div class="col">User Signature<div class="signature-line"></div></div>
+        <div class="col">Department Admin<div class="signature-line"></div></div>
+        <div class="col">Directorate Admin<div class="signature-line"></div></div>
+    </div>
+</div>
+{% endblock %}

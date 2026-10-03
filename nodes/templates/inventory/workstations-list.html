@@ -1,0 +1,157 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    {% include 'inventory/header.html' %}
+
+    <div class="card shadow-sm rounded-3 overflow-hidden bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover table-group-divider align-middle mb-0 border-top-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="px-4 py-3 fw-bold text-secondary">Type</th>
+                        <th class="py-3 fw-bold text-secondary">Device</th>
+                        <th class="py-3 fw-bold text-secondary">Serial</th>
+                        <th class="py-3 fw-bold text-secondary">Registration</th>
+                        <th class="py-3 fw-bold text-secondary">IP Address</th>
+                        <th class="py-3 fw-bold text-secondary">Assigned User</th>
+                        <th class="py-3 fw-bold text-secondary">Usage</th>
+                        <th class="text-center py-3 fw-bold text-secondary">Details</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for workstation in workstations %}
+                    <tr>
+                        <td class="px-4 py-2 text-start align-middle">
+                            {% if workstation.type == 'DesktopComputer' %}
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-1">
+                                    Desktop
+                                </span>
+                            {% elif workstation.type == 'AllInOneComputer' %}
+                                <span class="badge bg-success-subtle text-success rounded-pill px-3 py-1">
+                                    All-In-One
+                                </span>
+                            {% elif workstation.type == 'LaptopComputer' %}
+                                <span class="badge bg-info-subtle text-info rounded-pill px-3 py-1">
+                                    Laptop
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-1">
+                                    {{ workstation.type_label }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-2">
+                            <a href="{{ workstation.detail_url }}" class="text-decoration-none">
+                                <div class="fw-semibold text-dark">
+                                    {{ workstation.brand|capfirst }}
+                                </div>
+                                <small class="text-muted">
+                                    {{ workstation.model|capfirst }}
+                                </small>
+                            </a>
+                        </td>
+
+                        <td class="py-2">
+                            <span class="small text-dark">
+                                {{ workstation.serial }}
+                            </span>
+                        </td>
+
+                        <td class="py-2">
+                            <span class="badge bg-light border text-dark px-3 py-2 rounded-pill">
+                                {{ workstation.registration_code }}
+                            </span>
+                        </td>
+
+                        <td class="py-2">
+                            {% if workstation.ip_address %}
+                                <a href="{% url 'ping_device' %}?ip={{ workstation.ip_address|urlencode }}"
+                                   class="text-primary text-decoration-none fw-semibold font-monospace">
+                                    {{ workstation.ip_address }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-2">
+                            {% if workstation.active_users %}
+                                <div class="d-flex flex-column gap-1">
+                                    {% for assignment in workstation.active_users %}
+                                        <div class="fw-medium">
+                                            {{ assignment.user.name|capfirst }}
+                                            {{ assignment.user.surname|capfirst }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2">
+                                    Unassigned
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="py-2">
+                            {% if workstation.usage_type == 'office' %}
+                                <span class="badge bg-primary-subtle text-primary rounded-pill px-4 py-2 fs-6">
+                                    <i class="bi bi-briefcase me-2"></i>Office
+                                </span>
+
+                            {% elif workstation.usage_type == 'laboratory' %}
+                                <span class="badge bg-success-subtle text-success rounded-pill px-4 py-2 fs-6">
+                                    <i class="bi bi-flask me-2"></i>Laboratory
+                                </span>
+
+                            {% elif workstation.usage_type == 'warehouse' %}
+                                <span class="badge bg-warning-subtle text-warning rounded-pill px-4 py-2 fs-6">
+                                    <i class="bi bi-box-seam me-2"></i>Warehouse
+                                </span>
+
+                            {% elif workstation.usage_type == 'serverRoom' %}
+                                <span class="badge bg-info-subtle text-info rounded-pill px-4 py-2 fs-6">
+                                    <i class="bi bi-server me-2"></i>Server Room
+                                </span>
+
+                            {% else %}
+                                <span class="badge bg-secondary-subtle text-secondary rounded-pill px-4 py-2 fs-6">
+                                    {{ workstation.usage_type|capfirst }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="text-center py-3 text-nowrap px-3">
+                            <a href="{{ workstation.detail_url }}"
+                               class="btn btn-link text-secondary p-1 rounded-2 d-inline-flex align-items-center justify-content-center text-decoration-none"
+                               title="View details"
+                               style="width: 32px; height: 32px">
+                                <i class="bi bi-eye fs-5 text-primary"></i>
+                                <span class="visually-hidden">View details</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div class="d-flex flex-column align-items-center">
+                                <i class="bi bi-pc-display fs-1 text-primary mb-3"></i>
+
+                                <h5 class="fw-semibold mb-2">
+                                    No Workstations Found
+                                </h5>
+
+                                <p class="text-muted mb-0">
+                                    There are currently no registered workstations.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,286 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    {% include 'inventory/header.html' %}
+
+    <!-- Top KPI Cards Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'devices-list' %}" class="d-block h-100 text-decoration-none">
+            <div class="card shadow-sm rounded-3 bg-white h-100">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <div class="bg-primary text-white p-3 rounded-3">
+                        <i class="bi bi-hdd-stack fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small text-uppercase fw-bold">
+                            Total devices
+                        </div>
+                        <div class="fs-4 fw-bold text-dark mb-0">
+                            {{ total_devices }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'devices-list' %}?assignment_status=assigned" class="d-block h-100 text-decoration-none">
+            <div class="card shadow-sm rounded-3 bg-white h-100">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <div class="bg-success text-white p-3 rounded-3">
+                        <i class="bi bi-person-check fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small text-uppercase fw-bold">
+                            Assigned devices
+                        </div>
+                        <div class="fs-4 fw-bold text-dark mb-0">
+                            {{ assigned_devices }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'devices-list' %}?assignment_status=unassigned" class="d-block h-100 text-decoration-none">
+            <div class="card shadow-sm rounded-3 bg-white h-100">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <div class="bg-warning text-white p-3 rounded-3">
+                        <i class="bi bi-person-dash fs-4"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small text-uppercase fw-bold">
+                            Unassigned devices
+                        </div>
+                        <div class="fs-4 fw-bold text-dark mb-0">
+                            {{ unassigned_devices }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Charts Row (Discrete rows of 3 with uniform sizing) -->
+    {% for chart in statistics_charts %}
+        {% if forloop.counter0|divisibleby:3 %}
+            {% if not forloop.first %}</div>{% endif %}
+            <div class="row g-3 mb-4">
+        {% endif %}
+        
+        <div class="col-xl-4 col-md-6">
+            <div class="card shadow-sm rounded-3 overflow-hidden bg-white h-100">
+                <div class="card-header bg-light border-bottom py-3">
+                    <h2 class="h6 mb-0 text-dark fw-bold">
+                        {{ chart.title }}
+                    </h2>
+                </div>
+
+                <div class="card-body position-relative d-flex justify-content-center align-items-center p-3" style="height: 360px;">
+                    <canvas
+                        id="chart-{{ forloop.counter }}"
+                        aria-label="{{ chart.title }} doughnut chart">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+
+        {% if forloop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <!-- Statistics Sections / Tables Row (Left-to-Right Discrete Rows with Full Borders & Smooth Rows) -->
+    {% for section, section_icon, entries in statistics_sections %}
+        {% if forloop.counter0|divisibleby:3 %}
+            {% if not forloop.first %}</div>{% endif %}
+            <div class="row g-3 mb-4">
+        {% endif %}
+        
+        <div class="col-xl-4 col-md-6">
+            <div class="card shadow-sm rounded-3 overflow-hidden bg-white h-100">
+                <div class="card-header bg-light border-bottom py-3">
+                    <h2 class="h6 mb-0 text-dark fw-bold">
+                        {{ section }}
+                    </h2>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover align-middle mb-0">
+                        <tbody>
+                            {% for category, count, icon, detail_url in entries %}
+                            <tr>
+                                <td class="text-dark px-3 py-2 align-middle w-75">
+                                    <span class="fw-medium">{{ category }}</span>
+                                </td>
+                                <td class="text-end px-3 py-2 align-middle w-25 text-nowrap">
+                                    <a href="{{ detail_url }}" class="text-decoration-none" title="View {{ category }}" aria-label="{{ category }}: {{ count }}">
+                                        <span class="d-inline-flex align-items-center justify-content-center badge bg-primary text-white fw-bold rounded-pill px-3 py-1" style="min-width: 2.5rem;">
+                                            {{ count }}
+                                        </span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {% if forloop.last %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+<script>
+    Chart.register(ChartDataLabels);
+
+    const chartColors = [
+        '#0d6efd',
+        '#198754',
+        '#ffc107',
+        '#dc3545',
+        '#6f42c1',
+        '#0dcaf0',
+        '#fd7e14',
+        '#20c997',
+        '#6c757d'
+    ];
+    const lightChartColors = new Set(['#ffc107', '#0dcaf0', '#20c997']);
+
+    const statisticsCharts = [
+        {% for chart in statistics_charts %}
+        {
+            id: 'chart-{{ forloop.counter }}',
+            labels: {{ chart.labels|safe }},
+            values: {{ chart.values|safe }},
+            urls: {{ chart.urls|safe }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    statisticsCharts.forEach((chart) => {
+        new Chart(document.getElementById(chart.id), {
+            type: 'doughnut',
+
+            data: {
+                labels: chart.labels,
+                datasets: [{
+                    data: chart.values,
+                    urls: chart.urls,
+                    backgroundColor: chartColors,
+                    borderColor: '#ffffff',
+                    borderWidth: 2,
+                    borderRadius: 6,
+                    cutout: '60%',
+                    radius: '95%',
+                    hoverOffset: 4,
+                    hoverBorderColor: '#ffffff',
+                    hoverBorderWidth: 2
+                }]
+            },
+
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                devicePixelRatio: window.devicePixelRatio > 1 ? window.devicePixelRatio * 2 : 2,
+                onClick: (event, activeElements, chart) => {
+                    if (!activeElements.length) return;
+
+                    const { datasetIndex, index } = activeElements[0];
+                    const url = chart.data.datasets[datasetIndex].urls[index];
+                    if (url) window.location.assign(url);
+                },
+                onHover: (event, activeElements) => {
+                    if (event.native?.target) {
+                        event.native.target.style.cursor = activeElements.length ? 'pointer' : 'default';
+                    }
+                },
+
+                animation: {
+                    animateRotate: true,
+                    animateScale: true
+                },
+
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            boxWidth: 12,
+                            boxHeight: 12,
+                            padding: 16,
+                            color: '#343a40',
+                            font: {
+                                size: 12,
+                                weight: '600'
+                            }
+                        }
+                    },
+
+                    tooltip: {
+                        backgroundColor: 'rgba(33, 37, 41, 0.9)',
+                        titleFont: { size: 13, weight: 'bold' },
+                        bodyFont: { size: 12 },
+                        padding: 10,
+                        cornerRadius: 6,
+                        callbacks: {
+                            label: function(context) {
+                                const value = context.raw;
+                                const total = context.dataset.data.reduce(
+                                    (sum, item) => sum + Number(item),
+                                    0
+                                );
+                                const percentage = total
+                                    ? ((value / total) * 100).toFixed(1)
+                                    : 0;
+
+                                return ` ${context.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    },
+
+                    datalabels: {
+                        color: (context) => lightChartColors.has(
+                            chartColors[context.dataIndex % chartColors.length]
+                        ) ? '#212529' : '#ffffff',
+                        font: {
+                            weight: 'bold',
+                            size: 11
+                        },
+                        formatter: (value, context) => {
+                            const total = context.dataset.data.reduce(
+                                (sum, item) => sum + Number(item),
+                                0
+                            );
+                            const percentage = total
+                                ? Math.round((value / total) * 100)
+                                : 0;
+
+                            return percentage >= 8
+                                ? `${value} (${percentage}%)`
+                                : percentage >= 5
+                                    ? `${percentage}%`
+                                : '';
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

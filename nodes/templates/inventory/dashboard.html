@@ -1,0 +1,277 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        {% include 'inventory/header.html' %}
+        <!-- DASHBOARD CARDS GRID -->
+        <div class="row g-3">
+            <!-- SPATIAL CATEGORY -->
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'cities-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-geo-alt text-success fs-4"></i>
+                            <h6 class="text-dark  fw-normal my-0 ">Cities</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-3  d-inline-flex align-items-center justify-content-center  fw-bold">{{ cities_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'areas-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-map text-success fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Areas</h6>
+                            <span class="badge bg-light text-dark fs-6  border border-dark-subtle rounded-3 px-3  d-inline-flex align-items-center justify-content-center  fw-bold">{{ areas_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'buildings-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-building text-success fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Buildings</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-3  d-inline-flex align-items-center justify-content-center  fw-bold">{{ buildings_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'floors-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-layers text-success fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Floors</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-3  d-inline-flex align-items-center justify-content-center  fw-bold">{{ floors_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'common-areas-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-grid text-success fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Common Areas</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-3  d-inline-flex align-items-center justify-content-center  fw-bold">{{ common_areas_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'rooms-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-door-open text-success fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Rooms</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ rooms_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'spaces-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-grid-3x3-gap text-success fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Spaces</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ spaces_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'sockets-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-success shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-ethernet text-success fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Sockets</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ sockets_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- ORGANIC CATEGORY -->
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'general-directorates-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-danger shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-diagram-3 text-danger fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Gen. Dir.</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ general_directorates_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'directorates-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-danger shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-diagram-2 text-danger fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Directorates</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ directorates_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'departments-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-danger shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-diagram-3 text-danger fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Departments</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ departments_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'offices-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-danger shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-briefcase text-danger fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Offices</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ offices_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'users-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-danger shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-people text-danger fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Users</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ users_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'assignments-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-danger shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-clipboard-check text-danger fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Assignments</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ assignments_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <!-- HARDWARE CATEGORY -->
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'desktops-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-pc-display text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Desktops</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ desktops_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'allInOnes-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-display text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">All-In-Ones</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ allInOnes_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'laptops-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-laptop text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Laptops</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ laptops_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'servers-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-server text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Servers</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ servers_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'printers-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-printer text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Printers</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ printers_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'switches-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-hdd-rack text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Switches</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ switches_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'access-points-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-router text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Access Points</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ access_points_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'phones-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-telephone text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Phones</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ phones_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'upses-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-battery-charging text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">UPS Units</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ upses_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
+                <a href="{% url 'peripherals-list' %}" class="text-decoration-none">
+                    <div class="card dashboard-card text-primary shadow-sm rounded-3 overflow-hidden h-100">
+                        <div class="card-body d-flex flex-column align-items-center justify-content-center gap-1 text-center p-1">
+                            <i class="bi bi-usb-symbol text-primary fs-4"></i>
+                            <h6 class="text-dark fw-normal my-0 lh-sm">Peripherals</h6>
+                            <span class="badge bg-light text-dark fs-6 border border-dark-subtle rounded-3 px-2  d-inline-flex align-items-center justify-content-center  fw-bold">{{ peripherals_count|default:0 }}</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

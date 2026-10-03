@@ -1,0 +1,206 @@
+html,body {
+    /* scrollbar-gutter: stable */
+      font-size: 16px; /* Or your preferred pixel/rem size */
+}
+
+/* Make Bootstrap containers wider on desktop screens */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px !important; /* Forces the layout to be wider */
+    }
+}
+
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px !important; /* Even wider layout for extra-large screens */
+    }
+}
+
+
+/* Category and dropdown surfaces */
+.dashboard-card,
+.nav-item.dropdown {
+    transition: background-color 220ms ease;
+    transition-delay: 50ms;
+}
+
+.dashboard-card.text-success,
+.nav-item.dropdown.border-success-subtle {
+    background-color: rgba(var(--bs-success-rgb), .09);
+}
+
+.dashboard-card.text-danger,
+.nav-item.dropdown.border-danger-subtle {
+    background-color: rgba(var(--bs-danger-rgb), .09);
+}
+
+.dashboard-card.text-primary,
+.nav-item.dropdown.border-primary-subtle {
+    background-color: rgba(var(--bs-primary-rgb), .09);
+}
+
+.dashboard-card.text-success:hover,
+.nav-item.dropdown.border-success-subtle:hover,
+.nav-item.dropdown.border-success-subtle.show {
+    background-color: rgba(var(--bs-success-rgb), .15);
+}
+
+.dashboard-card.text-danger:hover,
+.nav-item.dropdown.border-danger-subtle:hover,
+.nav-item.dropdown.border-danger-subtle.show {
+    background-color: rgba(var(--bs-danger-rgb), .15);
+}
+
+.dashboard-card.text-primary:hover,
+.nav-item.dropdown.border-primary-subtle:hover,
+.nav-item.dropdown.border-primary-subtle.show {
+    background-color: rgba(var(--bs-primary-rgb), .15);
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: rgba(15, 23, 42, 0.04);
+}
+
+.dropdown-menu .dropdown-item:active {
+    color: var(--bs-dropdown-link-color);
+    background-color: rgba(15, 23, 42, 0.04);
+}
+
+#mobileNav a.mobile-user-signout,
+#mobileNav a.mobile-user-signout:hover,
+#mobileNav a.mobile-user-signout:focus,
+#mobileNav a.mobile-user-signout:focus-visible {
+    color: var(--bs-danger) !important;
+}
+
+.mobile-nav-category {
+    transition: background-color 220ms ease;
+}
+
+.mobile-nav-accordion-button {
+    width: calc(100% - 2rem) !important;
+    margin-left: 1rem !important;
+    margin-right: 1rem !important;
+}
+
+.mobile-nav-spatial {
+    background-color: rgba(var(--bs-success-rgb), .09);
+}
+
+.mobile-nav-spatial:hover,
+.mobile-nav-spatial:not(.collapsed) {
+    background-color: rgba(var(--bs-success-rgb), .15);
+}
+
+.mobile-nav-organic {
+    background-color: rgba(var(--bs-danger-rgb), .09);
+}
+
+.mobile-nav-organic:hover,
+.mobile-nav-organic:not(.collapsed) {
+    background-color: rgba(var(--bs-danger-rgb), .15);
+}
+
+.mobile-nav-hardware {
+    background-color: rgba(var(--bs-primary-rgb), .09);
+}
+
+.mobile-nav-hardware:hover,
+.mobile-nav-hardware:not(.collapsed) {
+    background-color: rgba(var(--bs-primary-rgb), .15);
+}
+
+.dashboard-card {
+    min-height: 100px;
+    padding: 0.35rem;
+}
+
+.dashboard-card > .card-body {
+    min-height: 100px;
+    height: 100%;
+}
+
+.navbar .dropdown-menu {
+    max-height: none;
+    overflow: visible;
+}
+
+.mobile-search-panel {
+    --bs-offcanvas-height: auto;
+    height: 92px !important;
+    max-height: 92px;
+    border-bottom: 1px solid var(--bs-border-color);
+    box-shadow: 0 .35rem 1rem rgba(15, 23, 42, .12) !important;
+}
+
+.mobile-search-panel .offcanvas-body {
+    min-height: 0;
+    overflow: visible;
+    padding: .75rem 1rem !important;
+}
+
+@media (max-width: 767.98px) {
+    .page-header-actions {
+        width: 100%;
+        margin-left: 0 !important;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.5rem !important;
+    }
+
+    .page-header-actions > .btn,
+    .page-header-actions > .dropdown {
+        flex: 0 1 auto;
+        max-width: 100%;
+    }
+
+    .page-header-add {
+        flex: 0 1 auto;
+        justify-content: center;
+        white-space: normal;
+        max-width: 100%;
+    }
+
+    .table-responsive.h-100 > table.table-hover {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    .table-responsive.h-100 > table.table-hover td {
+        white-space: normal;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .table-responsive.h-100 > table.table-hover td:first-child {
+        width: 44%;
+        text-align: left !important;
+    }
+
+    .table-responsive.h-100 > table.table-hover td:last-child {
+        width: 56%;
+    }
+
+    .table-responsive.h-100 > table.table-hover td.w-20p {
+        width: 56% !important;
+    }
+}
+
+.table-responsive > table.table-hover > thead > tr > th:first-child,
+.table-responsive > table.table-hover > tbody > tr > td:first-child {
+    padding-left: 1.25rem !important;
+    padding-inline-start: 1.25rem !important;
+}
+
+.workstation-type {
+    padding-left: 1.25rem !important;
+    padding-inline-start: 1.25rem !important;
+    text-align: left !important;
+}
+
+/* Keep list table layout consistent without forcing template-wide markup changes */
+
+
+

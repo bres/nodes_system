@@ -1,0 +1,81 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        {% include 'inventory/header.html' %}
+        <div class="card shadow-sm rounded-3 overflow-hidden bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover table-group-divider align-middle mb-0 border-top-0">
+            <thead class="table-light text-muted text-uppercase small border-bottom">
+                <tr>
+                    <th class="py-3 fw-bold text-secondary">Brand / Model</th>
+                    <th class="py-3 fw-bold text-secondary">Serial</th>
+                    <th class="py-3 fw-bold text-secondary">Reg. Code</th>
+                    <th class="py-3 fw-bold text-secondary">IP Address</th>
+                    {% if show_assigned_user %}
+                        <th class="py-3 fw-bold text-secondary">Assigned User</th>
+                    {% endif %}
+                    <th class="py-3 fw-bold text-secondary">Type</th>
+                    <th class="py-3 fw-bold text-secondary">City / Area</th>
+                    <th class="py-3 fw-bold text-secondary">Building</th>
+                    <th class="text-center py-3 fw-bold text-secondary">Details</th>
+                </tr>
+            </thead>
+            <tbody class="text-secondary fs-6">
+                {% for device in devices %}
+                    <tr class="border-bottom">
+                        <td class="py-3">
+                            <div class="fw-semibold text-dark">{{ device.brand|capfirst }}</div>
+                            <small class="text-muted">{{ device.model|capfirst|default:'—' }}</small>
+                        </td>
+                        <td class="py-3 text-muted text-nowrap">{{ device.serial|capfirst }}</td>
+                        <td class="py-3 text-muted">{{ device.registration_code|capfirst|default:'—' }}</td>
+                        <td class="py-3 text-nowrap">
+                            {% if device.ip_address %}
+                                <a href="{% url 'ping_device' %}?ip={{ device.ip_address|urlencode }}" class="text-primary text-decoration-none font-monospace ip-address">{{ device.ip_address }}</a>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        {% if show_assigned_user %}
+                            <td class="py-3 text-muted">
+                                {% if device.active_assignments %}
+                                    <div class="d-flex flex-column gap-1">
+                                        {% for assignment in device.active_assignments %}
+                                            <span>{{ assignment.user.name|capfirst }} {{ assignment.user.surname|capfirst }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2">Unassigned</span>
+                                {% endif %}
+                            </td>
+                        {% endif %}
+                        <td class="py-3 text-muted">{{ device.get_specific_device.device_label|default:'Device' }}</td>
+                        {% if device.space %}
+                            <td class="py-3 text-muted">{{ device.space.room.floor.building.area.city.name }} / {{ device.space.room.floor.building.area.name }}</td>
+                            <td class="py-3 text-muted">{{ device.space.room.floor.building.name }}</td>
+                        {% elif device.common_area %}
+                            <td class="py-3 text-muted">{{ device.common_area.floor.building.area.city.name }} / {{ device.common_area.floor.building.area.name }}</td>
+                            <td class="py-3 text-muted">{{ device.common_area.floor.building.name }}</td>
+                        {% else %}
+                            <td class="py-3 text-muted">—</td>
+                            <td class="py-3 text-muted">—</td>
+                        {% endif %}
+                        <td class="text-center py-3 text-nowrap px-3">
+                            <a href="{{ device.detail_url }}" class="btn btn-link text-secondary p-1 rounded-2 d-inline-flex align-items-center justify-content-center text-decoration-none" title="View details" style="width: 32px; height: 32px">
+                                <i class="bi bi-eye fs-5 text-primary"></i>
+                                <span class="visually-hidden">View details</span>
+                            </a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="{% if show_assigned_user %}9{% else %}8{% endif %}" class="text-center py-5 text-muted">No devices found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

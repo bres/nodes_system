@@ -1,0 +1,204 @@
+{% extends 'inventory/base.html' %}
+
+{% block content %}
+<style>
+    .handover-custom-select .form-select {
+        min-height: 42px;
+        white-space: normal;
+    }
+
+    .handover-custom-select .dropdown-menu {
+        max-height: 300px;
+        overflow-y: auto;
+        border-color: var(--bs-border-color);
+    }
+
+    .handover-custom-select .dropdown-item {
+        white-space: normal;
+        line-height: 1.35;
+        padding: 0.6rem 0.7rem;
+        border-radius: 0.375rem;
+    }
+
+    .handover-custom-select .dropdown-item + .dropdown-item {
+        margin-top: 0.15rem;
+    }
+
+    .handover-user-option {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.25rem;
+    }
+
+    .handover-user-name {
+        color: var(--bs-emphasis-color);
+        font-weight: 700;
+    }
+
+    .handover-user-organization {
+        color: var(--bs-secondary-color);
+    }
+
+    .handover-assigned-label {
+        flex-basis: 100%;
+        color: var(--bs-secondary-color);
+        font-size: 0.875em;
+        margin-top: 0.2rem;
+    }
+
+    .handover-assigned-device {
+        font-size: 0.8em;
+        font-weight: 600;
+        margin: 0.15rem 0.2rem 0 0;
+    }
+</style>
+<div class="container-fluid pb-4">
+    {% include 'inventory/header.html' %}
+
+    <form method="post" class="handover-form card shadow-sm rounded-3 bg-white">
+        {% csrf_token %}
+        <div class="card-header bg-body-tertiary border-bottom">
+            <h2 class="h6 mb-0">Material Charge Details</h2>
+        </div>
+        <div class="card-body p-4">
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+            <div class="row g-3">
+                <div class="col-12 col-md-8">
+                    <label class="form-label" for="{{ form.users.id_for_label }}">{{ form.users.label }}</label>
+                    {{ form.users }}
+                    <div class="form-text">Select one or more users from the dropdown.</div>
+                    {{ form.users.errors }}
+                </div>
+                <div class="col-12 col-md-4">
+                    <label class="form-label" for="{{ form.report_date.id_for_label }}">{{ form.report_date.label }}</label>
+                    {{ form.report_date }}
+                    {{ form.report_date.errors }}
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="{{ form.comments.id_for_label }}">{{ form.comments.label }}</label>
+                    {{ form.comments }}
+                    {{ form.comments.errors }}
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white d-flex justify-content-end gap-2">
+            <a href="{% url 'assignments-list' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-file-earmark-text me-1"></i> Create report
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const selects = document.querySelectorAll('.handover-form select[name="users"], .handover-form select[name^="device_"]');
+
+    function escapeHtml(value) {
+        return value.replace(/[&<>'"]/g, function (character) {
+            return {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[character];
+        });
+    }
+
+    function optionMarkup(select, option) {
+        const text = escapeHtml(option.textContent);
+        if (select.name === 'users') {
+            const assignedSeparator = text.indexOf(' - Assigned devices: ');
+            const identity = assignedSeparator === -1 ? text : text.slice(0, assignedSeparator);
+            const assigned = assignedSeparator === -1 ? '' : text.slice(assignedSeparator + ' - Assigned devices: '.length);
+            const identitySeparator = identity.indexOf(' - ');
+            const name = identitySeparator === -1 ? identity : identity.slice(0, identitySeparator);
+            const organization = identitySeparator === -1 ? '' : identity.slice(identitySeparator + 3);
+            const assignedMarkup = assigned
+                ? `<span class="handover-assigned-label">Assigned devices:</span>${assigned.split(', ').map((device) => `<span class="badge text-bg-light border handover-assigned-device">${device}</span>`).join('')}`
+                : '';
+            return `<span class="handover-user-option"><span class="handover-user-name">${name}</span>${organization ? `<span class="handover-user-organization">- ${organization}</span>` : ''}${assignedMarkup}</span>`;
+        }
+
+        const parts = text.split(' | ');
+        const identity = parts.shift() || '';
+        const typeSeparator = identity.indexOf(': ');
+        const typeMarkup = typeSeparator === -1
+            ? identity
+            : `<strong>${identity.slice(0, typeSeparator)}</strong>${identity.slice(typeSeparator)}`;
+        const serialSeparator = typeMarkup.lastIndexOf(' - ');
+        const identityMarkup = serialSeparator === -1
+            ? typeMarkup
+            : `${typeMarkup.slice(0, serialSeparator)} - <strong>${typeMarkup.slice(serialSeparator + 3)}</strong>`;
+        const locationMarkup = parts.map((part) => {
+            if (!part.startsWith('Assigned:')) return part;
+            return `Assigned: <strong>${part.slice('Assigned:'.length).trim()}</strong>`;
+        });
+        return [identityMarkup, ...locationMarkup].join(' | ');
+    }
+
+    selects.forEach(function (select) {
+        select.classList.add('visually-hidden');
+        const wrapper = document.createElement('div');
+        wrapper.className = 'position-relative handover-custom-select';
+        select.parentNode.insertBefore(wrapper, select);
+        wrapper.appendChild(select);
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'form-select text-start';
+        button.innerHTML = select.multiple ? 'Select users' : 'Select device';
+        wrapper.appendChild(button);
+
+        const menu = document.createElement('div');
+        menu.className = 'dropdown-menu w-100 p-2 shadow-sm';
+        wrapper.appendChild(menu);
+
+        function updateButton() {
+            const selected = Array.from(select.selectedOptions);
+            if (!selected.length) {
+                button.textContent = select.multiple ? 'Select users' : 'Select device';
+                return;
+            }
+            button.innerHTML = selected.map((option) => optionMarkup(select, option)).join(', ');
+        }
+
+        Array.from(select.options).forEach(function (option) {
+            if (!option.value) return;
+            const item = document.createElement('label');
+            item.className = 'dropdown-item d-flex align-items-start gap-2 text-wrap';
+            const input = document.createElement('input');
+            input.type = select.multiple ? 'checkbox' : 'radio';
+            input.name = `${select.name}_custom`;
+            input.checked = option.selected;
+            input.className = 'form-check-input mt-1 flex-shrink-0';
+            input.addEventListener('change', function () {
+                if (!select.multiple) {
+                    Array.from(select.options).forEach((entry) => { entry.selected = entry === option; });
+                    menu.classList.remove('show');
+                } else {
+                    option.selected = input.checked;
+                }
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+                updateButton();
+            });
+            const text = document.createElement('span');
+            text.innerHTML = optionMarkup(select, option);
+            item.append(input, text);
+            menu.appendChild(item);
+        });
+
+        button.addEventListener('click', function () {
+            menu.classList.toggle('show');
+        });
+        document.addEventListener('click', function (event) {
+            if (!wrapper.contains(event.target)) menu.classList.remove('show');
+        });
+        updateButton();
+    });
+});
+</script>
+{% endblock %}

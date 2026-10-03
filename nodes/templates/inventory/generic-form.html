@@ -1,0 +1,109 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pt-0 pb-3">
+        {% include 'inventory/header.html' %}
+        <div class="row g-4 px-0">
+            <div class="col-12">
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger shadow-sm border-0 rounded-3 p-3 mb-4 d-flex align-items-start gap-3">
+                        <i class="bi bi-exclamation-triangle-fill fs-5 text-danger mt-1"></i>
+                        <div>
+                            <h6 class="alert-heading fw-bold mb-1">Please correct the following errors:</h6>
+                            {% for error in form.non_field_errors %}
+                                <div class="small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                <form method="post"
+                      novalidate
+                      class="card border border-light-subtle shadow-sm rounded-3 overflow-hidden bg-white">
+                    {% csrf_token %}
+                    <div class="card-body p-4 p-md-5">
+                        <div class="row g-4">
+                            {% for field in form %}
+                                <div class="col-12 {% if field.field.widget.input_type != 'checkbox' %}col-md-6{% endif %}">
+                                    {% if field.field.widget.input_type == 'checkbox' %}
+                                        <div class="form-check form-switch p-3 border rounded-3 bg-light d-flex align-items-center justify-content-between m-0">
+                                            <div class="pe-3">
+                                                <label for="{{ field.id_for_label }}"
+                                                       class="form-check-label fw-semibold text-dark d-block">
+                                                    {{ field.label }}
+                                                </label>
+                                                {% if field.help_text %}
+                                                    <small class="text-muted d-block mt-1">{{ field.help_text }}</small>
+                                                {% endif %}
+                                            </div>
+                                            {{ field }}
+                                        </div>
+                                        {% for error in field.errors %}
+                                            <div class="text-danger small mt-1">
+                                                <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="form-group">
+                                            <label for="{{ field.id_for_label }}"
+                                                   class="form-label fw-semibold text-secondary mb-2">
+                                                {{ field.label }}
+                                                {% if field.field.required %}<span class="text-danger">*</span>{% endif %}
+                                            </label>
+                                            {{ field }}
+                                            {% for error in field.errors %}
+                                                <div class="invalid-feedback d-block small mt-1">
+                                                    <i class="bi bi-exclamation-circle me-1"></i>{{ error }}
+                                                </div>
+                                            {% endfor %}
+                                            {% if field.help_text %}<div class="form-text text-muted small mt-1">{{ field.help_text }}</div>{% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light border-top border-light-subtle px-4 py-3 d-flex flex-column flex-md-row align-items-stretch align-items-md-center justify-content-between gap-3">
+                        <div class="text-muted small text-center text-md-start">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Fields with <span class="text-danger">*</span> are required
+                        </div>
+                        <div class="d-flex flex-column flex-sm-row align-items-stretch gap-2 align-self-stretch align-self-md-auto">
+                            <a href="{% url cancel_url %}"
+                               class="btn btn-warning rounded-3 px-4 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2 shadow-sm">
+                                <i class="bi bi-x-lg"></i>
+                                <span>Cancel</span>
+                            </a>
+                            <button type="submit"
+                                    class="btn btn-success rounded-3 px-4 py-2 fw-semibold d-inline-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-{% if object %}check-lg{% else %}plus-lg{% endif %}"></i>
+                                {% if object %}Save Changes{% else %}Create {{ model_verbose_name|capfirst }}{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll('input:not([type=checkbox]):not([type=radio]), textarea').forEach(el => {
+            el.classList.add('form-control', 'py-2', 'px-3', 'rounded-3', 'border-secondary-subtle');
+            if (el.closest('.form-group')?.querySelector('.invalid-feedback')) {
+                el.classList.add('is-invalid');
+            }
+        });
+
+        document.querySelectorAll('select').forEach(el => {
+            el.classList.add('form-select', 'py-2', 'px-3', 'rounded-3', 'border-secondary-subtle');
+            if (el.closest('.form-group')?.querySelector('.invalid-feedback')) {
+                el.classList.add('is-invalid');
+            }
+        });
+
+        document.querySelectorAll('input[type=checkbox]').forEach(el => {
+            el.classList.add('form-check-input', 'm-0');
+        });
+    });
+    </script>
+    <script src="{% static 'nodes/js/socket_chained.js' %}"></script>
+{% endblock %}

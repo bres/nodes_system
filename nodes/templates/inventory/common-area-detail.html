@@ -1,0 +1,207 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pt-0 pb-3">
+        {% include 'inventory/header.html' %}
+        <div class="row g-4 px-0 align-items-stretch">
+            <div class="col-12 col-md-5 col-xl-4 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 p-4 h-100 bg-white d-flex flex-column w-100">
+                    <div class="text-uppercase fw-bold mb-4 text-tracked">Structural Breakdown</div>
+                    <div class="row g-3 text-center mb-4">
+                        <div class="col-4">
+                            <div class="bg-light border rounded-3 p-2 py-3 h-100 d-flex flex-column justify-content-center">
+                                <span class="text-primary small d-block mb-1 fw-semibold">Floor</span>
+                                <a href="{% url 'floor-detail' common_area.floor.pk %}" class="fw-bold fs-4 text-decoration-none link-primary d-block">
+                                    {{ common_area.floor.floor_number }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light border rounded-3 p-2 py-3 h-100 d-flex flex-column justify-content-center align-items-center text-center">
+                                <span class="text-primary small d-block mb-1 fw-semibold">Type</span>
+                                <a href="{% url 'common-areas-list' %}?{{ location_query }}" class="fw-bold fs-5 text-decoration-none link-primary text-center lh-1 mb-0 w-100 px-1">
+                                    {{ common_area.get_area_type_display }}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="bg-light border rounded-3 p-2 py-3 h-100 d-flex flex-column justify-content-center">
+                                <span class="text-primary small d-block mb-1 fw-semibold">Sockets</span>
+                                <a href="{% url 'sockets-list' %}?{{ location_query }}" class="fw-bold fs-4 text-decoration-none link-primary d-block">
+                                    {{ common_area.sockets_count|default:0 }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-4 mt-0 text-primary opacity-25">
+                    <div class="flex-grow-1 d-flex flex-column">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="text-uppercase fw-bold text-tracked">Geographic Location</div>
+                            <small class="text-muted text-truncate ms-2"
+                                   title="{{ common_area.floor.building.name|capfirst }}">
+                                <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                                {{ common_area.floor.building.name|capfirst }}
+                            </small>
+                        </div>
+                        <div class="border border-light-subtle rounded-3 overflow-hidden bg-light position-relative flex-grow-1 min-h-260">
+                            {% with building=common_area.floor.building %}
+                                {% with address_query=building.address|default:''|add:", "|add:building.postal_code|default:''|add:", "|add:building.area.name|add:", "|add:building.area.city.name %}
+                                    <iframe width="100%"
+                                            height="100%"
+                                            class="border-0"
+                                            loading="lazy"
+                                            allowfullscreen
+                                            referrerpolicy="no-referrer-when-downgrade"
+                                            src="https://maps.google.com/maps?q={{ address_query|urlencode }}&t=&z=16&ie=UTF8&iwloc=&output=embed">
+                                    </iframe>
+                                {% endwith %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-7 col-xl-8 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white h-100 w-100">
+                    <div class="table-responsive h-100">
+                        <table class="table table-hover align-middle mb-0 h-100">
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-pc-display fs-6 me-2 text-primary"></i>Desktop Workstations
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6 w-20p">
+                                        {% if common_area.desktops_count %}
+                                            <a href="{% url 'desktops-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.desktops_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.desktops_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-display text-primary fs-6 me-2"></i>All-in-One Stations
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.allinones_count %}
+                                            <a href="{% url 'allInOnes-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.allinones_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.allinones_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-laptop text-primary fs-6 me-2"></i>Laptops
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.laptops_count %}
+                                            <a href="{% url 'laptops-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.laptops_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.laptops_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-server text-primary fs-6 me-2"></i>Servers
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.servers_count %}
+                                            <a href="{% url 'servers-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.servers_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.servers_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-keyboard text-primary fs-6 me-2"></i>Peripherals
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.peripherals_count %}
+                                            <a href="{% url 'peripherals-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.peripherals_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.peripherals_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-printer text-primary fs-6 me-2"></i>Printer Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.printers_count %}
+                                            <a href="{% url 'printers-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.printers_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.printers_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-battery-charging text-primary fs-6 me-2"></i>UPS Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.ups_count %}
+                                            <a href="{% url 'upses-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.ups_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.ups_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-hdd-network text-primary fs-6 me-2"></i>Network Switches
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.switches_count %}
+                                            <a href="{% url 'switches-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.switches_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.switches_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-wifi text-primary fs-6 me-2"></i>Access Points
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.accesspoints_count %}
+                                            <a href="{% url 'access-points-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.accesspoints_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.accesspoints_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-telephone text-primary fs-6 me-2"></i>Phone Units
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if common_area.phones_count %}
+                                            <a href="{% url 'phones-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.phones_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.phones_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal border-0">
+                                        <i class="bi bi-ethernet text-primary fs-6 me-2"></i>Sockets
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6 border-0">
+                                        {% if common_area.sockets_count %}
+                                            <a href="{% url 'sockets-list' %}?{{ location_query }}" class="text-decoration-none"><span class="badge bg-primary">{{ common_area.sockets_count|default:0 }}</span></a>
+                                        {% else %}
+                                            <span class="badge bg-light text-secondary border">{{ common_area.sockets_count|default:0 }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

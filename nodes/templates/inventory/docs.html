@@ -1,0 +1,252 @@
+<!-- NODES APPLICATION DOCUMENTATION MODAL -->
+<div class="modal fade" id="manualModal" tabindex="-1" aria-labelledby="manualModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            
+            <!-- Modal Header -->
+            <div class="modal-header border-bottom bg-body-tertiary px-4 py-3">
+                <h5 class="modal-title d-flex align-items-center gap-2 fw-bold text-dark" id="manualModalLabel">
+                    <span class="p-2 bg-primary-subtle text-primary rounded-3 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-hdd-network fs-5"></i>
+                    </span>
+                    Nodes Management Documentation
+                </h5>
+                <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body p-4 p-lg-5">
+                
+                <!-- Introduction -->
+                <p class="text-secondary fs-6 mb-5">
+                    This application manages physical locations, organizational units, users, devices, peripherals, device assignments, and material handover reports.
+                </p>
+
+                <!-- SECTION 1: PHYSICAL LOCATIONS -->
+                <div class="mb-5">
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-diagram-3-fill me-2"></i>Physical Locations
+                    </h6>
+                    <div class="card bg-body-tertiary border-0 rounded-4 p-4 mb-3">
+                        <div class="d-flex flex-column gap-3">
+                            <!-- Topology Path 1 -->
+                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                <span class="badge bg-primary px-2 py-1">City</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-primary px-2 py-1">Area</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-primary px-2 py-1">Building</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-primary px-2 py-1">Floor</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-primary px-2 py-1">Room</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-primary px-2 py-1">Space</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-dark px-2 py-1">Socket and/or Device</span>
+                            </div>
+                            <hr class="text-muted opacity-25 my-1">
+                            <!-- Topology Path 2 -->
+                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                <span class="badge bg-secondary px-2 py-1">City</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-secondary px-2 py-1">Area</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-secondary px-2 py-1">Building</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-secondary px-2 py-1">Floor</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-secondary px-2 py-1">Common Area</span>
+                                <i class="bi bi-arrow-right text-muted"></i>
+                                <span class="badge bg-dark px-2 py-1">Socket and/or Device</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">A Room belongs to a Floor and contains Spaces. A Common Area belongs directly to a Floor. Sockets and Devices must each be assigned to either a Space or a Common Area, but not both.</p>
+                </div>
+
+                <!-- SECTION 2: ORGANIZATION STRUCTURE -->
+                <div class="mb-5">
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-people-fill me-2"></i>Organization Structure
+                    </h6>
+                    <div class="card bg-body-tertiary border-0 rounded-4 p-4 mb-3">
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <span class="badge bg-success px-2 py-1">General Directorate</span>
+                            <i class="bi bi-arrow-right text-muted"></i>
+                            <span class="badge bg-success px-2 py-1">Directorate</span>
+                            <i class="bi bi-arrow-right text-muted"></i>
+                            <span class="badge bg-success px-2 py-1">Department</span>
+                            <i class="bi bi-arrow-right text-muted"></i>
+                            <span class="badge bg-success px-2 py-1">Office</span>
+                            <i class="bi bi-arrow-right text-muted"></i>
+                            <span class="badge bg-dark px-2 py-1">User</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-0">The organization hierarchy is General Directorate → Directorate → Department → Office. User records can reference these organizational units.</p>
+                </div>
+
+                <!-- SECTION 3: DEVICES AND PERIPHERALS -->
+                <div class="mb-5">
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-hdd-network me-1"></i>Devices and Peripherals
+                    </h6>
+                    <div class="card bg-body-tertiary border-0 rounded-4 p-4 mb-3">
+                        <!-- Tree Container Style -->
+                        <div class="inventory-tree font-monospace small">
+                            
+                            <!-- Shared Device fields -->
+                            <div class="d-flex align-items-center gap-2 mb-3">
+                                <span class="badge bg-primary px-3 py-2 fs-6 fw-bold">
+                                    <i class="bi bi-hdd-stack me-1"></i> Device (shared device fields)
+                                </span>
+                            </div>
+
+                            <!-- Tree Branch Level 1: Subtypes / Inheritance -->
+                            <div class="ms-4 ps-3 border-start border-2 border-primary-subtle d-flex flex-column gap-2 mb-3 position-relative">
+                                <div class="text-xs text-muted uppercase fw-bold tracking-wider mb-1" style="font-size: 0.75rem;">
+                                    └─ Device types:
+                                </div>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">Desktop Computer</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">All-in-One Computer</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">Laptop Computer</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">Server Computer</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">Printer</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">Switch</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">Access Point</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">UPS</span>
+                                    <span class="badge bg-white text-dark border px-2 py-1 shadow-sm">Phone</span>
+                                </div>
+                            </div>
+
+                            <!-- Tree Branch Level 2: Child Composition (Peripherals & Ports) -->
+                            <div class="ms-4 ps-3 border-start border-2 border-secondary-subtle d-flex flex-column gap-2">
+                                <div class="text-xs text-muted uppercase fw-bold tracking-wider mb-1" style="font-size: 0.75rem;">
+                                    └─ Peripherals belong to one Device:
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="badge bg-dark px-2 py-1">
+                                        <i class="bi bi-usb-plug me-1"></i> Peripherals (keyboard, monitor, mouse)
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <p class="text-muted small">Device types share common fields such as brand, model, serial number, usage type, location, and optional socket. Peripherals are linked to a Device.</p>
+                    <ul class="text-muted small ps-3 mb-0">
+                        <li class="mb-1">A Device must have exactly one location: a Space or a Common Area.</li>
+                        <li class="mb-1">A Device may optionally use a Socket. The Socket must be in the same Building, and a Socket can be assigned to at most one Device.</li>
+                        <li>Serial numbers are unique. Registration codes, IP addresses, and MAC addresses must also be unique when provided.</li>
+                    </ul>
+                </div>
+
+                <!-- SECTION 4: DELETION RULES & MODEL RESTRICTIONS -->
+                <div class="mb-5">
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-shield-exclamation me-2"></i>Deletion Behavior and Dependencies
+                    </h6>
+                    
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="card border-danger border-opacity-25 bg-danger-subtle bg-opacity-10 rounded-4 p-3 h-100">
+                                <div class="d-flex align-items-center gap-2 text-danger fw-bold mb-1">
+                                    <i class="bi bi-shield-lock-fill fs-5"></i> RESTRICT
+                                </div>
+                                <div class="small text-secondary">Deletion is blocked while a protected child record still references the item. Remove or reassign those references first.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-warning border-opacity-25 bg-warning-subtle bg-opacity-10 rounded-4 p-3 h-100">
+                                <div class="d-flex align-items-center gap-2 text-warning-emphasis fw-bold mb-1">
+                                    <i class="bi bi-lightning-charge-fill fs-5"></i> CASCADE
+                                </div>
+                                <div class="small text-secondary">Deleting the parent also deletes related records whose relationship uses CASCADE.</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-info border-opacity-25 bg-info-subtle bg-opacity-10 rounded-4 p-3 h-100">
+                                <div class="d-flex align-items-center gap-2 text-info-emphasis fw-bold mb-1">
+                                    <i class="bi bi-check-circle-fill fs-5"></i> SET NULL
+                                </div>
+                                <div class="small text-secondary">The related record remains, but its optional reference to the deleted item is cleared.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card border-0 bg-body-tertiary rounded-4 p-4">
+                        <h6 class="fw-bold text-dark fs-7 mb-3">What happens when you delete a record?</h6>
+                        <ul class="text-muted small ps-3 mb-0">
+                            <li class="mb-2"><strong>City:</strong> blocked while it has Areas. <strong>Area:</strong> blocked while it has Buildings. <strong>Building:</strong> blocked while it has Floors. These links use RESTRICT.</li>
+                            <li class="mb-2"><strong>Floor:</strong> deleting it cascades to its Rooms and Common Areas. This also removes their Spaces, Sockets, Devices, and any Assignments or Peripherals belonging to those Devices.</li>
+                            <li class="mb-2"><strong>Room:</strong> deleting it cascades to its Spaces and their dependent Sockets and Devices. <strong>Space or Common Area:</strong> deleting either cascades to its Sockets and Devices.</li>
+                            <li class="mb-2"><strong>Socket:</strong> its Devices are kept; each Device's optional Socket reference is cleared (SET_NULL).</li>
+                            <li class="mb-2"><strong>General Directorate:</strong> blocked while Directorates or Users still reference it (RESTRICT).</li>
+                            <li class="mb-2"><strong>Directorate, Department, Office:</strong> deletion cascades to their dependent organizational records and Users. Deleting a User also deletes that User's Assignments.</li>
+                            <li class="mb-2"><strong>Device:</strong> deletion removes its device-type record, Peripherals, and Assignments.</li>
+                            <li><strong>Peripheral or Assignment:</strong> can be deleted individually without deleting its parent Device or User.</li>
+                        </ul>
+                        <p class="text-muted small mt-3 mb-0">A delete blocked by RESTRICT shows an error; remove or reassign the remaining references before trying again. Cascaded deletions remove child records permanently.</p>
+                    </div>
+                </div>
+
+                <!-- Lifecycle and Validation -->
+                <div class="mb-5">
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-calendar-check me-2"></i>Lifecycle Execution & Validation Rules
+                    </h6>
+                    <ul class="text-muted small ps-3 mb-0">
+                        <li class="mb-1">Records using lifecycle fields have an active flag and valid-from/valid-to dates. Saving a record outside its date window marks it inactive; it does not delete the record.</li>
+                        <li class="mb-1">City names are unique without regard to case. Area names are unique within a City; Building names within an Area; Room codes within a Floor; Space names within a Room; and Common Area names within a Floor.</li>
+                        <li class="mb-1">Floor numbers must be at least -2 and unique within their Building.</li>
+                        <li class="mb-1">Socket codes are unique within a Building. Device serial numbers are unique; registration codes, IP addresses, and MAC addresses are unique when provided.</li>
+                        <li>General Directorate names and organizational names within their parent level must be unique. User email addresses are unique without regard to case.</li>
+                    </ul>
+                </div>
+
+                <!-- Safe Creation Order -->
+                <div class="mb-5">
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-list-ol me-2"></i>Recommended Record Creation Order
+                    </h6>
+                    <p class="text-muted small">Create parent records before the records that depend on them.</p>
+                    <ol class="text-muted small ps-3 mb-0">
+                        <li class="mb-1"><strong>Locations:</strong> City → Area → Building → Floor, then Room → Space or Common Area.</li>
+                        <li class="mb-1"><strong>Organization:</strong> General Directorate → Directorate → Department → Office, then User.</li>
+                        <li class="mb-1"><strong>Devices:</strong> create a Socket or Device at a Space/Common Area; add optional Peripherals to a Device.</li>
+                        <li><strong>Assignments:</strong> link an existing User and Device with assignment dates and type.</li>
+                    </ol>
+                </div>
+
+                <!-- Creation Restrictions -->
+                <div class="mb-5">
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-calendar-check me-2"></i>Assignment Rules
+                    </h6>
+                    <ul class="text-muted small ps-3 mb-0">
+                        <li class="mb-1">The Assignment form rejects end dates earlier than assignment dates.</li>
+                        <li class="mb-1">If a Device has a shared assignment, its other assignments must also be shared; shared and primary assignments cannot coexist.</li>
+                        <li class="mb-1">Primary assignment periods cannot overlap for the same Device or User. A User's primary and temporary assignments for the same Device cannot overlap.</li>
+                        <li>Material handover reports require selected Users to have an Assignment whose date range includes today, and to share the same single Device.</li>
+                    </ul>
+                </div>
+
+                <!-- Material Handover -->
+                <div>
+                    <h6 class="text-uppercase fw-bold text-primary tracking-wide fs-7 mb-3">
+                        <i class="bi bi-clipboard-check me-2"></i>Material Handover Report
+                    </h6>
+                    <p class="text-muted small mb-0">The report form requires at least one User. Each selected User must have an Assignment whose date range includes today, and all selected Users must share the same single Device. The form also records a report date and optional comments.</p>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer border-top bg-body-tertiary px-4 py-3">
+                <button type="button" class="btn btn-secondary btn-sm rounded-pill px-4 shadow-none" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>

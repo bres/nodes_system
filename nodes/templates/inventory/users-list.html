@@ -1,0 +1,81 @@
+{% extends 'inventory/base.html' %}
+{% load static header_helpers %}
+{% block content %}
+    <div class="container-fluid">
+        {% include 'inventory/header.html' %}
+        <!-- Main Data Table -->
+        <div class="card shadow-sm rounded-3 overflow-hidden bg-white">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 inventory-list-table">
+                    <thead class="table-light border-bottom border-light-subtle text-uppercase small">
+                        <tr>
+                            <th scope="col"
+                                class="py-3 text-secondary fw-semibold text-start ps-3 w-25p">Full Name</th>
+                            <th scope="col"
+                                class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-25p">Email Address</th>
+                            <th scope="col"
+                                class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Personal Phone</th>
+                            <th scope="col"
+                                class="py-3 text-secondary fw-semibold text-center text-nowrap px-3">Assigned Phone</th>
+                            <th scope="col"
+                                class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-10p">Status</th>
+                            <th scope="col"
+                                class="py-3 text-secondary fw-semibold text-center text-nowrap px-3 w-10p">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-dark fs-6">
+                        {% for user in users %}
+                            <tr>
+                                <td class="py-3 text-start ps-3">
+                                    <a href="{% url 'user-detail' user.pk %}"
+                                       class="fw-semibold text-dark text-decoration-none">
+                                        {{ user.name|capfirst }} {{ user.surname|capfirst }}
+                                    </a>
+                                </td>
+                                <td class="py-3 text-muted text-center text-nowrap px-3">{{ user.email }}</td>
+                                <td class="py-3 text-muted text-center text-nowrap px-3">
+                                    {% if user.phone %}{{ user.phone }}{% else %}<span class="text-muted fw-normal">—</span>{% endif %}
+                                </td>
+                                <td class="py-3 text-muted text-center px-3">
+                                    {% for phone_number in user.assigned_phone_numbers %}
+                                        <a class="d-block text-decoration-none" href="tel:{{ phone_number }}">{{ phone_number }}</a>
+                                    {% empty %}
+                                        <span class="text-muted fw-normal">—</span>
+                                    {% endfor %}
+                                </td>
+                                <td class="py-3 text-center text-nowrap px-3">
+                                    {% if user.is_active %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-pill">Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-pill">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center py-3 text-nowrap px-3">
+                                    <a href="{% url 'user-detail' user.pk %}"
+                                       class="text-secondary p-1 link-secondary rounded-2 d-inline-flex align-items-center justify-content-center"
+                                       title="View details">
+                                        <i class="bi bi-eye fs-5 text-primary"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted">
+                                    <div class="py-4">
+                                        <i class="{{ page_icon }} text-primary fs-1 d-block mb-3"></i>
+                                        <h6 class="fw-semibold text-primary mb-1">No Users Indexed</h6>
+                                        <p class="small text-muted mb-3">No users indexed in the database inventory registry.</p>
+                                        <a href="{% url 'create-user' %}"
+                                           class="btn btn-sm btn-success rounded-3 px-3 py-2 fw-semibold">
+                                            <i class="bi bi-plus-lg me-1"></i>Add User
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

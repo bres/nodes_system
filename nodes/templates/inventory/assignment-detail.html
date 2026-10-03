@@ -1,0 +1,214 @@
+{% extends 'inventory/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid pt-0 pb-3">
+        <!-- Header / Breadcrumbs Navbar -->
+        {% include 'inventory/header.html' %}
+        <div class="row px-0 mb-3">
+            <div class="col-12">
+                <ul class="nav nav-tabs w-100 border-0 mb-0" aria-label="User assignments">
+                    {% for user_assignment in user_assignments %}
+                        <li class="nav-item">
+                            <a class="nav-link px-3 {% if user_assignment.pk == assignment.pk %}active bg-secondary-subtle text-dark border-0{% endif %}"
+                               href="{% url 'assignment-detail' user_assignment.pk %}"
+                               {% if user_assignment.pk == assignment.pk %}aria-current="page"{% endif %}>
+                                {{ user_assignment.device.brand|capfirst }} {{ user_assignment.device.model|default:"Device"|capfirst }}
+                                <span class="small ms-1 {% if user_assignment.pk == assignment.pk %}text-dark{% endif %}">{{ user_assignment.device.serial }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="w-100 border-top border-2 rounded-pill" style="border-top-color: var(--bs-secondary-bg-subtle) !important;" aria-hidden="true"></div>
+            </div>
+        </div>
+        <!-- Side-by-side Layout -->
+        <div class="row g-4 px-0 align-items-stretch">
+            <!-- Left Column: Context Status & Metadata Badges -->
+            <div class="col-12 col-md-4 col-xl-3 d-flex">
+                <div class="card shadow-sm rounded-3 p-3 w-100 bg-white d-flex flex-column">
+                    <div class="text-uppercase text-muted fw-bold mb-2 small text-tracked small-075">Allocation Class Scope</div>
+                    <!-- Status Indicator Grid -->
+                    <div class="row g-2 text-center mb-3">
+                        <div class="col-12">
+                            <div class="bg-light border border-light-subtle rounded-3 p-2">
+                                <span class="text-muted small d-block mb-1 fw-semibold text-xs">Assignment Category</span>
+                                <span class="badge fw-semibold border rounded-pill px-3 py-1.5 fs-7 d-inline-flex align-items-center gap-1 mt-1 {% if assignment.assignment_type == 'primary' %} bg-primary-subtle text-primary border-primary-subtle {% elif assignment.assignment_type == 'shared' %} bg-success-subtle text-success border-success-subtle {% else %} bg-warning-subtle text-warning border-warning-subtle {% endif %}">
+                                    <i class="bi {% if assignment.assignment_type == 'primary' %} bi-person-check {% elif assignment.assignment_type == 'shared' %} bi-people {% else %} bi-person-dash {% endif %}">
+                                    </i>
+                                    {{ assignment.assignment_type|capfirst }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="bg-light border border-light-subtle rounded-3 p-2">
+                                <span class="text-muted small d-block mb-1 fw-semibold text-xs">Usage Environment</span>
+                                <span class="badge fw-semibold border rounded-pill px-3 py-1.5 fs-7 d-inline-flex align-items-center gap-1 mt-1 {% if assignment.device.usage_type == 'office' %} bg-info-subtle text-info border-info-subtle {% elif assignment.device.usage_type == 'laboratory' %} bg-warning-subtle text-warning border-warning-subtle {% else %} bg-secondary-subtle text-secondary border-secondary-subtle {% endif %}">
+                                    <i class="bi {% if assignment.device.usage_type == 'office' %} bi-briefcase {% elif assignment.device.usage_type == 'laboratory' %} bi-flask {% else %} bi-question-circle {% endif %}">
+                                    </i>
+                                    {{ assignment.device.usage_type|capfirst }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mb-3 mt-0 text-muted opacity-25">
+                    <!-- Log Node Info Section -->
+                    <div class="flex-grow-1 d-flex flex-column">
+                        <div class="text-uppercase text-muted fw-bold mb-2 small text-tracked small-075">Allocation Timeline Tracker</div>
+                        <div class="d-flex flex-column gap-2 small">
+                            <div class="d-flex align-items-center gap-3 py-2 px-1 border-bottom border-light-subtle">
+                                <i class="bi bi-calendar-check text-success fs-5"></i>
+                                <div>
+                                    <span class="text-muted d-block text-xs">Deployment Start</span>
+                                    <span class="fw-bold text-dark small-085">{{ assignment.assignment_date }}</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-3 py-2 px-1">
+                                <i class="bi bi-calendar-x text-secondary fs-5"></i>
+                                <div>
+                                    <span class="text-muted d-block text-xs">Decommission Target</span>
+                                    <span class="fw-bold text-dark small-085">{{ assignment.end_date|default:"Continuous Term" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column: Full Matrix Parameter Fields Registry matching room-detail layout -->
+            <div class="col-12 col-md-8 col-xl-9 d-flex flex-column">
+                <div class="card shadow-sm rounded-3 overflow-hidden bg-white h-100 w-100">
+                    <div class="table-responsive h-100">
+                        <table class="table table-hover align-middle mb-0 h-100">
+                            <tbody>
+                                <!-- Assignment fields -->
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-calendar-check text-primary fs-6 me-2"></i>Assignment Date
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">{{ assignment.assignment_date|date:"Y-m-d" }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-calendar-x text-primary fs-6 me-2"></i>End Date
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">{{ assignment.end_date|date:"Y-m-d"|default:"Continuous Term" }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-person text-primary fs-6 me-2"></i>Full Name
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if assignment.user %}
+                                            <a href="{% url 'user-detail' assignment.user.pk %}" class="text-decoration-none text-primary fw-bold">{{ assignment.user.name|capfirst }} {{ assignment.user.surname|capfirst }}</a>
+                                        {% else %}
+                                            <span class="text-muted fw-normal">System Unassigned</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <!-- Field 2: Recipient Communication Email -->
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-envelope text-primary fs-6 me-2"></i>Contact Email
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if assignment.user.email %}
+                                            <a href="mailto:{{ assignment.user.email }}"
+                                               class="text-decoration-none fw-bold">{{ assignment.user.email }}</a>
+                                        {% else %}
+                                            <span class="text-muted fw-normal">—</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <!-- Field 3: Device Brand -->
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-tag text-primary fs-6 me-2"></i>Brand
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% if assignment.device %}
+                                            {% if assignment.device.desktopcomputer %}
+                                                <a href="{% url 'desktop-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.allinonecomputer %}
+                                                <a href="{% url 'allInOne-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.laptopcomputer %}
+                                                <a href="{% url 'laptop-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.servercomputer %}
+                                                <a href="{% url 'server-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.printer %}
+                                                <a href="{% url 'printer-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.ups %}
+                                                <a href="{% url 'ups-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.switch %}
+                                                <a href="{% url 'switch-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.accesspoint %}
+                                                <a href="{% url 'access-point-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% elif assignment.device.phone %}
+                                                <a href="{% url 'phone-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% else %}
+                                                <a href="{% url 'device-detail' assignment.device.pk %}" class="text-decoration-none text-primary fw-bold">
+                                            {% endif %}
+                                                {{ assignment.device.brand|capfirst }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted fw-normal">—</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <!-- Field 4: Device Model -->
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-layers text-primary fs-6 me-2"></i>Hardware Model Reference
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {{ assignment.device.model|capfirst }}
+                                    </td>
+                                </tr>
+                                <!-- Field 5: Device Serial Code -->
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-qr-code-scan text-primary fs-6 me-2"></i>System Serial Code (S/N)
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {{ assignment.device.serial }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="ps-4 fw-normal">
+                                        <i class="bi bi-usb-symbol text-primary fs-6 me-2"></i>Attached Peripherals
+                                    </td>
+                                    <td class="text-end pe-4 fw-normal fs-6">
+                                        {% with peripherals=assignment.device.peripherals.all %}
+                                            {% if peripherals %}
+                                                <div class="d-flex flex-column gap-1 align-items-end">
+                                                    {% for peripheral in peripherals %}
+                                                        <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle">
+                                                            {{ peripheral.get_peripheral_type_display|default:peripheral.peripheral_type|capfirst }}: {{ peripheral.serial_number|default:'—' }}
+                                                        </span>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted fw-normal">None</span>
+                                            {% endif %}
+                                        {% endwith %}
+                                    </td>
+                                </tr>
+                                <!-- Field 6: Log Notes -->
+                                <tr>
+                                    <td class="ps-4 fw-normal border-0 align-top">
+                                        <i class="bi bi-sticky text-primary fs-6 me-2"></i>Operational Logs & Remarks
+                                    </td>
+                                    <td class="text-end pe-4 border-0">
+                                        {% if assignment.notes %}
+                                            <div class="bg-light text-start text-secondary border border-light-subtle rounded-3 p-3 text-wrap small-085">{{ assignment.notes }}</div>
+                                        {% else %}
+                                            <span class="text-muted fw-normal fs-7">No operational registry remarks recorded for this allocation item.</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
