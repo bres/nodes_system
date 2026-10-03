@@ -15,8 +15,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-fallback-key-ch
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # ALLOWED DOMAINS: Updated to include Render (.onrender.com) for production
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nodes_system.onrender.com']
-
+ALLOWED_HOSTS = ['nodes-system.onrender.com', '.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
